@@ -6,7 +6,7 @@
       <Value Profile="(Default)">henrikfeldt</Value>
     </Setting>
     <Setting Name="Login_Password" Type="System.String" Scope="User">
-      <Value Profile="(Default)">topSecret</Value>
+      <Value Profile="(Default)">6a5w9348w16a89w346s51dfa6938</Value>
     </Setting>
     <Setting Name="Login_Client" Type="System.String" Scope="User">
       <Value Profile="(Default)">DS</Value>

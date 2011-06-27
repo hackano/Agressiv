@@ -37,7 +37,7 @@ namespace Agress.WebDriver {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("topSecret")]
+        [global::System.Configuration.DefaultSettingValueAttribute("6a5w9348w16a89w346s51dfa6938")]
         public string Login_Password {
             get {
                 return ((string)(this["Login_Password"]));
