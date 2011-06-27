@@ -58,5 +58,17 @@ namespace Agress.UI.Properties {
                 this["Login_Client"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://economy.waygroup.se/agresso/System/Login.aspx")]
+        public string Login_Url {
+            get {
+                return ((string)(this["Login_Url"]));
+            }
+            set {
+                this["Login_Url"] = value;
+            }
+        }
     }
 }

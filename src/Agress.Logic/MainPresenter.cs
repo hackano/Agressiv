@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using WatiN.Core;
@@ -11,22 +9,36 @@ namespace Agress.Logic
 {
 	public class MainPresenter
 	{
+		private readonly string _LoginUsername;
+		private readonly string _LoginPassword;
+		private readonly string _LoginClient;
+		private readonly string _LoginUrl;
+
 		private IE _ie;
-		private IDictionary<string, string> _settings;
+
+		public MainPresenter(string loginUsername, string loginPassword, string loginClient, string loginUrl)
+		{
+			_LoginUsername = loginUsername;
+			_LoginPassword = loginPassword;
+			_LoginClient = loginClient;
+			_LoginUrl = loginUrl;
+		}
 
 		public IE TheBrowser
 		{
 			get
 			{
-				var url = Settings["Agresso.Url"];
-
 				if (_ie == null)
 				{
-					WatiN.Core.Settings.AutoMoveMousePointerToTopLeft = false;
+					Settings.AutoMoveMousePointerToTopLeft = false;
 
-					_ie = new IE(url);
+					_ie = new IE(_LoginUrl);
 					_ie.ShowWindow(NativeMethods.WindowShowStyle.ShowMaximized);
 				}
+
+				// handle invalid certificate error!
+				if (_ie.Links.Exists("overridelink"))
+					_ie.Link("overridelink").Click();
 
 				return _ie;
 			}
@@ -41,40 +53,16 @@ namespace Agress.Logic
 			}
 		}
 
-
-		public IDictionary<string, string> Settings
-		{
-			get
-			{
-				if (_settings == null)
-				{
-					var appSettings = ConfigurationManager.AppSettings;
-
-					_settings = new Dictionary<string, string>(4);
-					_settings.Add("Login.UserName", appSettings.Get("Login.UserName"));
-					_settings.Add("Login.Client", appSettings.Get("Login.Client"));
-					_settings.Add("Login.Password", appSettings.Get("Login.Password"));
-					_settings.Add("Agresso.Url", appSettings.Get("Agresso.Url"));
-				}
-
-				return _settings;
-			}
-		}
-
 		public bool LogIn()
 		{
-			var userName = Settings["Login.UserName"];
-			var client = Settings["Login.Client"];
-			var password = Settings["Login.Password"];
-
 			var nameField = TheBrowser.TextField(Find.ById("_name"));
 			var clientField = TheBrowser.TextField(Find.ById("_client"));
 			var passwordField = TheBrowser.TextField(Find.ById("_password"));
 			var loginButton = TheBrowser.Button(Find.ById("Button1"));
 
-			nameField.TypeText(userName);
-			clientField.TypeText(client);
-			passwordField.TypeText(password);
+			nameField.TypeText(_LoginUsername);
+			clientField.TypeText(_LoginClient);
+			passwordField.TypeText(_LoginPassword);
 			loginButton.Click();
 
 			var cell = TheBrowser.TableCell(Find.ByText("Det gick inte att logga in. Kontrollera uppgifterna och försök igen."));
@@ -83,11 +71,16 @@ namespace Agress.Logic
 
 		public void GotoTimeRegistration()
 		{
-			var timeAndExpenses = TheBrowser.Frame("_menuFrame").Link(Find.ByText("Tid och utlägg"));
+			var timeAndExpenses = TheBrowser.
+				Frame("_menuFrame").
+				Link(Find.ByText("Tid och utlägg"));
+			
 			timeAndExpenses.Click();
 
-			var plusLink =
-				TheBrowser.Frame("_menuFrame").Image(Find.BySrc("https://economy.waygroup.se/agresso/System/Images/Plus.gif"));
+			var plusLink = TheBrowser.
+				Frame("_menuFrame").
+				Image(Find.BySrc("https://economy.waygroup.se/agresso/System/Images/Plus.gif"));
+
 			while (plusLink.Exists)
 			{
 				plusLink.Click();
@@ -109,8 +102,7 @@ namespace Agress.Logic
 			TextField[] tfs = {null, null, null, null, null, null, null};
 			for (var i = 1; i <= 7; i++)
 			{
-				tfs[i - 1] =
-					TheBrowser.Frame("containerFrame").TextField(
+				tfs[i - 1] = TheBrowser.Frame("containerFrame").TextField(
 						Find.ById(string.Format("b_s10_g10s93__row{0}_reg_value{1}_i", rowNo, i)));
 				if (tfs[i - 1].Exists)
 				{
@@ -119,19 +111,17 @@ namespace Agress.Logic
 			}
 
 			var currentPeriod = GetCurrentPeriodId();
+
 			if (currentPeriod.EndsWith("_1"))
-			{
 				Fillout(rowNo, timeCodeId, projectId, activityId, description, roleId, tfs, hours, 1, lastDay);
-			}
+
 			else if (currentPeriod.EndsWith("_2"))
 			{
 				var hours2 = hours.Skip(7 - lastDay).Take(lastDay).ToArray();
 				Fillout(rowNo, timeCodeId, projectId, activityId, description, roleId, tfs, hours2, 1, lastDay);
 			}
 			else
-			{
 				Fillout(rowNo, timeCodeId, projectId, activityId, description, roleId, tfs, hours, 1, 7);
-			}
 		}
 
 		private void Fillout(int rowNo, string timeCodeId, string projectId, string activityId, string description,
@@ -269,11 +259,11 @@ namespace Agress.Logic
 		{
 			try
 			{
-				var logoutField = TheBrowser.Frame("_menuFrame").Div(Find.ByTitle("Avsluta aktuell session"));
+				var logoutField = TheBrowser.Frame("_menuFrame")
+					.Div(Find.ByTitle("Avsluta aktuell session"));
+
 				if (logoutField.Exists)
-				{
 					logoutField.Click();
-				}
 
 				TheBrowser.Close();
 			}
@@ -284,11 +274,9 @@ namespace Agress.Logic
 
 		public string GetSettingsString()
 		{
-			var userName = Settings["Login.UserName"];
-			var client = Settings["Login.Client"];
-			var url = Settings["Agresso.Url"];
-
-			return string.Format("Name: {0} @ {1}{2}{3}{4}", userName, client, Environment.NewLine, url, Environment.NewLine);
+			return string.Format("Name: {0} @ {1}{2}{3}{4}", 
+				_LoginUsername, _LoginClient, 
+				Environment.NewLine, _LoginUrl, Environment.NewLine);
 		}
 
 		public void GotoTimeRegistration1(string[] reg1)

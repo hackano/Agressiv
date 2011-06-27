@@ -11,5 +11,8 @@
     <Setting Name="Login_Client" Type="System.String" Scope="User">
       <Value Profile="(Default)">DS</Value>
     </Setting>
+    <Setting Name="Login_Url" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://economy.waygroup.se/agresso/System/Login.aspx</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
