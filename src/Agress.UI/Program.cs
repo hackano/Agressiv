@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Windows.Forms;
+using MassTransit;
 
 namespace Agress.UI
 {
-	internal static class Program
+	internal class Program
 	{
+		private IServiceBus _Bus;
+
 		/// <summary>
 		/// 	The main entry point for the application.
 		/// </summary>
@@ -13,7 +16,21 @@ namespace Agress.UI
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new MainForm());
+
+			var p = new Program();
+			p.Run();
+		}
+
+		private void Run()
+		{
+			_Bus = ServiceBusFactory.New(sbc =>
+			{
+				sbc.ReceiveFrom("rabbitmq://localhost/Agressiv");
+				sbc.UseRabbitMq();
+				sbc.UseRabbitMqRouting();
+			});
+
+			Application.Run(new MainForm(_Bus));
 		}
 	}
 }

@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Agress.WebDriver" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Login_Username" Type="System.String" Scope="User">
+      <Value Profile="(Default)">henrikfeldt</Value>
+    </Setting>
+    <Setting Name="Login_Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)">6a5w9348w16a89w346s51dfa6938</Value>
+    </Setting>
+    <Setting Name="Login_Client" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DS</Value>
+    </Setting>
+    <Setting Name="Login_Url" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://economy.waygroup.se/agresso/System/Login.aspx</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

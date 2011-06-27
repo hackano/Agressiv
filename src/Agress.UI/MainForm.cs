@@ -1,14 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
+using Agress.Core.Commands;
 using Agress.Logic;
 using Agress.UI.Properties;
+using MassTransit;
+using System.Linq;
 
 namespace Agress.UI
 {
 	public partial class MainForm : Form
 	{
-		public MainForm()
+		private readonly IServiceBus _Bus;
+
+		public MainForm(IServiceBus bus)
 		{
+			_Bus = bus;
 			InitializeComponent();
 
 			var settings = Settings.Default;
@@ -49,28 +56,43 @@ namespace Agress.UI
 		private void buttonReg1_Click(object sender, EventArgs e)
 		{
 			var reg1 = textBoxReg1.Text;
+			
 			var strings1 = reg1.Split(';');
+
+
 			if (strings1.Length != 12)
-			{
 				textBoxInfo.AppendText("Input must be ;-separated with 12 parts");
-			}
 			else
-			{
 				p.GotoTimeRegistration1(strings1);
-			}
 		}
 
 		private void buttonReg2_Click(object sender, EventArgs e)
 		{
 			var reg2 = textBoxReg2.Text;
-			var strings2 = reg2.Split(';');
-			if (strings2.Length != 12)
+			var reg1 = reg2.Split(';');
+
+			if (reg1.Length != 12)
 			{
 				textBoxInfo.AppendText("Input must be ;-separated with 12 parts");
 			}
 			else
 			{
-				p.GotoTimeRegistration1(strings2);
+				var timeCodeId = reg1[0];
+				var projectId = reg1[1];
+				var activityId = reg1[2];
+				var description = reg1[3];
+				var roleId = reg1[4];
+				// todo: send to specific endpoint instead
+				_Bus.Publish(new ReportAWeekOfTimes(
+					timeCodeId,
+					projectId,
+					activityId,
+					description,
+					roleId,
+					reg1.Skip(5).Take(7).Select(double.Parse).ToList()
+					));
+
+				//p.GotoTimeRegistration1(reg1);
 			}
 		}
 

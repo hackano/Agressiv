@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using Agress.Core.Commands;
+using MassTransit;
 using WatiN.Core;
 using WatiN.Core.Comparers;
 using WatiN.Core.Native.Windows;
 
 namespace Agress.Logic
 {
-	public class MainPresenter
+	public class MainPresenter : Consumes<ReportAWeekOfTimes>.All
 	{
 		private readonly string _LoginUsername;
 		private readonly string _LoginPassword;
@@ -93,12 +95,10 @@ namespace Agress.Logic
 		}
 
 		private void RegisterProjectDay(int rowNo, string timeCodeId, string projectId, string activityId, string description,
-		                                string roleId, double day1Hours, double day2Hours, double day3Hours, double day4Hours,
-		                                double day5Hours, double day6Hours, double day7Hours)
+		                                string roleId, double[] hours)
 		{
 			var lastDay = 1;
 
-			double[] hours = {day1Hours, day2Hours, day3Hours, day4Hours, day5Hours, day6Hours, day7Hours};
 			TextField[] tfs = {null, null, null, null, null, null, null};
 			for (var i = 1; i <= 7; i++)
 			{
@@ -295,8 +295,27 @@ namespace Agress.Logic
 			var hours7 = double.Parse(reg1[11]);
 
 			var i = InsertNewLine();
-			RegisterProjectDay(i, timeCodeId, projectId, activityId, description, roleId, hours1, hours2, hours3, hours4, hours5,
-			                   hours6, hours7);
+
+			RegisterProjectDay(i, timeCodeId, projectId, activityId, description, roleId, 
+				new[]{hours1, hours2, hours3, hours4, hours5,
+			                   hours6, hours7});
+		}
+
+		public void Consume(ReportAWeekOfTimes message)
+		{
+			if (!IsLoggedIn)
+				LogIn();
+
+			GotoTimeRegistration();
+
+			var i = InsertNewLine();
+
+			RegisterProjectDay(i, 
+				message.TimeCodeId, message.ProjectId, 
+				message.ActivityId, message.Description, message.RoleId, 
+				message.WeekHours.ToArray());
+
+			
 		}
 
 		private void GotoPeriod(int offset, int periodPart)
