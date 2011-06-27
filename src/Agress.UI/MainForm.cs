@@ -140,7 +140,7 @@ namespace Agress.UI
 
 		private void buttonClose_Click(object sender, EventArgs e)
 		{
-			p.Logout();
+			p.LogOut();
 		}
 	}
 }

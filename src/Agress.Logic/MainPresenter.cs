@@ -14,7 +14,7 @@ namespace Agress.Logic
 		private readonly string _LoginClient;
 		private readonly string _LoginUrl;
 
-		private IE _ie;
+		private IE _Browser;
 
 		public MainPresenter(string loginUsername, string loginPassword, string loginClient, string loginUrl)
 		{
@@ -28,19 +28,19 @@ namespace Agress.Logic
 		{
 			get
 			{
-				if (_ie == null)
+				if (_Browser == null)
 				{
 					Settings.AutoMoveMousePointerToTopLeft = false;
 
-					_ie = new IE(_LoginUrl);
-					_ie.ShowWindow(NativeMethods.WindowShowStyle.ShowMaximized);
+					_Browser = new IE(_LoginUrl);
+					_Browser.ShowWindow(NativeMethods.WindowShowStyle.ShowMaximized);
 				}
 
 				// handle invalid certificate error!
-				if (_ie.Links.Exists("overridelink"))
-					_ie.Link("overridelink").Click();
+				if (_Browser.Links.Exists("overridelink"))
+					_Browser.Link("overridelink").Click();
 
-				return _ie;
+				return _Browser;
 			}
 		}
 
@@ -255,7 +255,7 @@ namespace Agress.Logic
 			salary.Click();
 		}
 
-		public void Logout()
+		public void LogOut()
 		{
 			try
 			{
@@ -377,7 +377,8 @@ namespace Agress.Logic
 		{
 			try
 			{
-				_ie.Close();
+				LogOut();
+				_Browser.Close();
 			}
 			catch
 			{
