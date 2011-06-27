@@ -11,7 +11,7 @@ namespace Agress.Logic
 {
 	public class MainPresenter
 	{
-		private IE _ie7;
+		private IE _ie;
 		private IDictionary<string, string> _settings;
 
 		public IE TheBrowser
@@ -20,15 +20,15 @@ namespace Agress.Logic
 			{
 				var url = Settings["Agresso.Url"];
 
-				if (_ie7 == null)
+				if (_ie == null)
 				{
 					WatiN.Core.Settings.AutoMoveMousePointerToTopLeft = false;
 
-					_ie7 = new IE(url);
-					_ie7.ShowWindow(NativeMethods.WindowShowStyle.ShowMaximized);
+					_ie = new IE(url);
+					_ie.ShowWindow(NativeMethods.WindowShowStyle.ShowMaximized);
 				}
 
-				return _ie7;
+				return _ie;
 			}
 		}
 
@@ -389,7 +389,7 @@ namespace Agress.Logic
 		{
 			try
 			{
-				_ie7.Close();
+				_ie.Close();
 			}
 			catch
 			{
