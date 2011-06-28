@@ -10,45 +10,26 @@ namespace Agress.Core.Commands
 		{
 		}
 
-		public ReportAWeekOfTimes(string timeCodeId, string projectId, string activityId, string description, string roleId, IList<double> weekHours)
+		public ReportAWeekOfTimes(string description, IList<double> weekHours, AccountingData data)
 		{
-			TimeCodeId = timeCodeId;
-			ProjectId = projectId;
-			ActivityId = activityId;
 			Description = description;
-			RoleId = roleId;
 			WeekHours = weekHours;
+			Data = data;
 		}
 
-		/// <summary>
-		/// Type of report - overtime, ordinary time, sick time, etc.
-		/// </summary>
-		public string TimeCodeId { get; protected set; }
-
-		/// <summary>
-		/// What project is being debited.
-		/// </summary>
-		public string ProjectId { get; protected set; }
-
-		/// <summary>
-		/// What type of activity is being debited.
-		/// </summary>
-		public string ActivityId { get; protected set; }
-		
 		/// <summary>
 		/// A description of the activity
 		/// </summary>
 		public string Description { get; protected set; }
 		
-		/// <summary>
-		/// The role of the person during the activity.
-		/// </summary>
-		public string RoleId { get; protected set; }
-
+		
 		/// <summary>
 		/// An array of 7 items, doubles,
 		/// of the hours spent.
 		/// </summary>
 		public IList<double> WeekHours { get; protected set; }
+
+
+		public AccountingData Data { get; protected set; }
 	}
 }

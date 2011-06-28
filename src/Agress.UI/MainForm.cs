@@ -63,7 +63,7 @@ namespace Agress.UI
 			if (strings1.Length != 12)
 				textBoxInfo.AppendText("Input must be ;-separated with 12 parts");
 			else
-				p.GotoTimeRegistration1(strings1);
+				SendTimeReport(strings1);
 		}
 
 		private void buttonReg2_Click(object sender, EventArgs e)
@@ -72,28 +72,21 @@ namespace Agress.UI
 			var reg1 = reg2.Split(';');
 
 			if (reg1.Length != 12)
-			{
 				textBoxInfo.AppendText("Input must be ;-separated with 12 parts");
-			}
 			else
 			{
-				var timeCodeId = reg1[0];
-				var projectId = reg1[1];
-				var activityId = reg1[2];
-				var description = reg1[3];
-				var roleId = reg1[4];
-				// todo: send to specific endpoint instead
-				_Bus.Publish(new ReportAWeekOfTimes(
-					timeCodeId,
-					projectId,
-					activityId,
-					description,
-					roleId,
-					reg1.Skip(5).Take(7).Select(double.Parse).ToList()
-					));
-
-				//p.GotoTimeRegistration1(reg1);
+				SendTimeReport(reg1);
 			}
+		}
+
+		private void SendTimeReport(string[] strings)
+		{
+			// todo: send to specific endpoint instead
+			_Bus.Publish(new ReportAWeekOfTimes(
+			             	strings[3],
+			             	strings.Skip(5).Take(7).Select(double.Parse).ToList(),
+							new AccountingData(strings[0], strings[1], strings[2], int.Parse(strings[4]))
+			             	));
 		}
 
 		private void buttonReg_Click(object sender, EventArgs e)

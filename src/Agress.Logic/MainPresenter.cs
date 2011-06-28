@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using Agress.Core.Commands;
 using MassTransit;
 using WatiN.Core;
 using WatiN.Core.Comparers;
+using WatiN.Core.Exceptions;
 using WatiN.Core.Native.Windows;
 
 namespace Agress.Logic
 {
-	public class MainPresenter : Consumes<ReportAWeekOfTimes>.All
+	public class MainPresenter : Consumes<ReportAWeekOfTimes>.All, Consumes<ReportTimesForADay>.All
 	{
 		private readonly string _LoginUsername;
 		private readonly string _LoginPassword;
@@ -65,7 +67,7 @@ namespace Agress.Logic
 			nameField.TypeText(_LoginUsername);
 			clientField.TypeText(_LoginClient);
 			passwordField.TypeText(_LoginPassword);
-			loginButton.Click();
+			loginButton.ClickNoWait();
 
 			var cell = TheBrowser.TableCell(Find.ByText("Det gick inte att logga in. Kontrollera uppgifterna och försök igen."));
 			return !cell.Exists;
@@ -73,33 +75,34 @@ namespace Agress.Logic
 
 		public void GotoTimeRegistration()
 		{
-			var timeAndExpenses = TheBrowser.
-				Frame("_menuFrame").
-				Link(Find.ByText("Tid och utlägg"));
-			
-			timeAndExpenses.Click();
+			Func<Frame> findFrame = () => TheBrowser.Frame("_menuFrame");
+			Frame frame = null;
+			bool cont = false;
+			while (!cont)
+				try { frame = findFrame(); cont = true; }
+				catch (FrameNotFoundException) { Thread.Sleep(20); }
 
-			var plusLink = TheBrowser.
-				Frame("_menuFrame").
-				Image(Find.BySrc("https://economy.waygroup.se/agresso/System/Images/Plus.gif"));
+
+			frame.Link(Find.ByText("Tid och utlägg")).Click();
+
+			var plusLink = findFrame().Image(Find.BySrc("https://economy.waygroup.se/agresso/System/Images/Plus.gif"));
 
 			while (plusLink.Exists)
 			{
 				plusLink.Click();
-				plusLink =
-					TheBrowser.Frame("_menuFrame").Image(Find.BySrc("https://economy.waygroup.se/agresso/System/Images/Plus.gif"));
+				plusLink = findFrame().Image(Find.BySrc("https://economy.waygroup.se/agresso/System/Images/Plus.gif"));
 			}
 
-			var daily = TheBrowser.Frame("_menuFrame").Link(Find.ByText("Daglig tidregistrering"));
+			var daily = findFrame().Link(Find.ByText("Daglig tidregistrering"));
 			daily.Click();
 		}
 
 		private void RegisterProjectDay(int rowNo, string timeCodeId, string projectId, string activityId, string description,
-		                                string roleId, double[] hours)
+										int roleId, double[] hours)
 		{
 			var lastDay = 1;
 
-			TextField[] tfs = {null, null, null, null, null, null, null};
+			TextField[] tfs = { null, null, null, null, null, null, null };
 			for (var i = 1; i <= 7; i++)
 			{
 				tfs[i - 1] = TheBrowser.Frame("containerFrame").TextField(
@@ -125,7 +128,7 @@ namespace Agress.Logic
 		}
 
 		private void Fillout(int rowNo, string timeCodeId, string projectId, string activityId, string description,
-		                     string roleId, TextField[] tfs, double[] hours, int startDay, int endDay)
+							 int roleId, TextField[] tfs, double[] hours, int startDay, int endDay)
 		{
 			var timeCodeField =
 				TheBrowser.Frame("containerFrame").TextField(Find.ById(string.Format("b_s10_g10s93__row{0}_timecode_i", rowNo)));
@@ -145,7 +148,7 @@ namespace Agress.Logic
 
 			var roleField =
 				TheBrowser.Frame("containerFrame").TextField(Find.ById(string.Format("b_s10_g10s93__row{0}_inc_cat_i", rowNo)));
-			roleField.TypeText(roleId);
+			roleField.TypeText(roleId.ToString());
 
 
 			for (var i = startDay; i <= endDay; i++)
@@ -274,8 +277,8 @@ namespace Agress.Logic
 
 		public string GetSettingsString()
 		{
-			return string.Format("Name: {0} @ {1}{2}{3}{4}", 
-				_LoginUsername, _LoginClient, 
+			return string.Format("Name: {0} @ {1}{2}{3}{4}",
+				_LoginUsername, _LoginClient,
 				Environment.NewLine, _LoginUrl, Environment.NewLine);
 		}
 
@@ -285,7 +288,7 @@ namespace Agress.Logic
 			var projectId = reg1[1];
 			var activityId = reg1[2];
 			var description = reg1[3];
-			var roleId = reg1[4];
+			var roleId = int.Parse(reg1[4]);
 			var hours1 = double.Parse(reg1[5]);
 			var hours2 = double.Parse(reg1[6]);
 			var hours3 = double.Parse(reg1[7]);
@@ -296,12 +299,26 @@ namespace Agress.Logic
 
 			var i = InsertNewLine();
 
-			RegisterProjectDay(i, timeCodeId, projectId, activityId, description, roleId, 
+			RegisterProjectDay(i, timeCodeId, projectId, activityId, description, roleId,
 				new[]{hours1, hours2, hours3, hours4, hours5,
 			                   hours6, hours7});
 		}
 
-		public void Consume(ReportAWeekOfTimes message)
+		public void Consume(ReportTimesForADay command)
+		{
+			if (!IsLoggedIn)
+				LogIn();
+
+			var line = VerifyLine();
+		}
+
+		private int VerifyLine()
+		{
+			// TODO: code 
+			return InsertNewLine();
+		}
+
+		public void Consume(ReportAWeekOfTimes command)
 		{
 			if (!IsLoggedIn)
 				LogIn();
@@ -310,10 +327,10 @@ namespace Agress.Logic
 
 			var i = InsertNewLine();
 
-			RegisterProjectDay(i, 
-				message.TimeCodeId, message.ProjectId, 
-				message.ActivityId, message.Description, message.RoleId, 
-				message.WeekHours.ToArray());
+			RegisterProjectDay(i,
+				command.Data.TimeCodeId, command.Data.ProjectId,
+				command.Data.ActivityId, command.Description, command.Data.RoleId,
+				command.WeekHours.ToArray());
 		}
 
 		private void GotoPeriod(int offset, int periodPart)
@@ -326,8 +343,8 @@ namespace Agress.Logic
 			{
 				var year = DateTime.Today.ToString("yy");
 				var weekOfYear = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(DateTime.Today,
-				                                                                   CalendarWeekRule.FirstFourDayWeek,
-				                                                                   DayOfWeek.Monday);
+																				   CalendarWeekRule.FirstFourDayWeek,
+																				   DayOfWeek.Monday);
 
 				previousPeriodId = string.Format("2{0}{1}{2}", year, weekOfYear, periodPart);
 			}
