@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -70,7 +72,10 @@ namespace Agress.Logic
 			passwordField.TypeText(_LoginPassword);
 			loginButton.ClickNoWait();
 
+			TheBrowser.WaitForComplete(5);
+
 			var cell = TheBrowser.TableCell(Find.ByText("Det gick inte att logga in. Kontrollera uppgifterna och försök igen."));
+			
 			return !cell.Exists;
 		}
 
@@ -289,6 +294,8 @@ namespace Agress.Logic
 				LogIn();
 
 			var line = VerifyLine(command.Data);
+
+			Debug.WriteLine(line);
 		}
 
 		private int VerifyLine(AccountingData data)
@@ -297,24 +304,30 @@ namespace Agress.Logic
 			return hasLine.Item1 ? hasLine.Item2.Value : InsertNewLine();
 		}
 
-		private Tuple<bool, int?> HasLine(AccountingData rowDataToFind)
+		private Tuple<bool, int?, IEnumerable<Div>> HasLine(AccountingData rowDataToFind)
 		{
 			for (var rowNo = 0; rowNo < 25; rowNo++)
 			{
-				var frame = TheBrowser.Frame("containerFrame");
 				Func<int, AttributeConstraint> ctl = i => Find.ById(string.Format("b_s10_g10s93__row{0}_ctl0{1}_c", rowNo, i));
 				// b_s10_g10s93__row1_ctl02_c
-				var timeIdField = frame.TextField(ctl(1));
-				var projectIdField = frame.TextField(ctl(2));
-				var activityIdField = frame.TextField(ctl(3));
-				var roleIdField = frame.TextField(ctl(5));
+				var timeIdField = TheBrowser.Frame("containerFrame").Div(ctl(1));
+				var projectIdField = TheBrowser.Frame("containerFrame").Div(ctl(2));
+				var activityIdField = TheBrowser.Frame("containerFrame").Div(ctl(3));
+				var roleIdField = TheBrowser.Frame("containerFrame").Div(ctl(5));
+				
+				Debug.WriteLine(timeIdField.Exists);
 
-				if (new AccountingData(timeIdField.Text.Trim(), projectIdField.Text.Trim(), activityIdField.Text.Trim(),
-					int.Parse(roleIdField.Text.Trim())).Equals(rowDataToFind))
-					return Tuple.Create(true, new int?(rowNo));
+				var timeCodeId = timeIdField.Text;
+				var projectId = projectIdField.Text.Trim();
+				var activityId = activityIdField.Text.Trim();
+				var roleId = int.Parse(roleIdField.Text.Trim());
+
+				if (new AccountingData(timeCodeId, projectId, activityId, roleId).Equals(rowDataToFind))
+					return Tuple.Create(true, new int?(rowNo),
+					                    (IEnumerable<Div>) new[] {timeIdField, projectIdField, activityIdField, roleIdField});
 			}
 
-			return Tuple.Create<bool, int?>(false, null);
+			return Tuple.Create<bool, int?, IEnumerable<Div>>(false, null, null);
 		}
 
 		public void Consume(ReportAWeekOfTimes command)

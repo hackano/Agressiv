@@ -20,7 +20,7 @@ namespace Agress.Logic.Specs
 				);
 		}
 
-		[Test]
+		[Test, STAThread]
 		public void Try_report_week()
 		{
 			driver.Consume(new ReportAWeekOfTimes(
@@ -30,7 +30,7 @@ namespace Agress.Logic.Specs
 			               	));
 		}
 
-		[Test]
+		[Test, STAThread]
 		public void Try_report_day()
 		{
 			driver.Consume(new ReportTimesForADay(DayOfWeek.Monday, 5.6, "Löpande", 

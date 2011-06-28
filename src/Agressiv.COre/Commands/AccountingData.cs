@@ -29,7 +29,7 @@ namespace Agress.Core.Commands
 		{
 		}
 
-		public AccountingData(string timeCodeId = "10", string projectId = "10100", string activityId = "10", int roleId = 2)
+		public AccountingData(string timeCodeId = "0", string projectId = "10100", string activityId = "10", int roleId = 2)
 		{
 			if (timeCodeId == null) throw new ArgumentNullException("timeCodeId");
 			if (projectId == null) throw new ArgumentNullException("projectId");
