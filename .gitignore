@@ -12,3 +12,4 @@ _ReSharper*
 * Thumbs.db
 *.nupkg
 src/Agress.Logic.Specs/Password.cs
+src/Agress.WebDriver/Password.cs

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agress.WebDriver", "Agress.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agress.Logic.Specs", "Agress.Logic.Specs\Agress.Logic.Specs.csproj", "{F0FFF440-D131-487F-BCF1-003E9FB1CEDC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agress.ExcelCreator", "Agress.ExcelCreator\Agress.ExcelCreator.csproj", "{041B43DC-069D-4B25-916E-44FCFB46137C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,16 @@ Global
 		{F0FFF440-D131-487F-BCF1-003E9FB1CEDC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{F0FFF440-D131-487F-BCF1-003E9FB1CEDC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F0FFF440-D131-487F-BCF1-003E9FB1CEDC}.Release|x86.ActiveCfg = Release|Any CPU
+		{041B43DC-069D-4B25-916E-44FCFB46137C}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{041B43DC-069D-4B25-916E-44FCFB46137C}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{041B43DC-069D-4B25-916E-44FCFB46137C}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{041B43DC-069D-4B25-916E-44FCFB46137C}.Debug|x86.ActiveCfg = Debug|x86
+		{041B43DC-069D-4B25-916E-44FCFB46137C}.Debug|x86.Build.0 = Debug|x86
+		{041B43DC-069D-4B25-916E-44FCFB46137C}.Release|Any CPU.ActiveCfg = Release|x86
+		{041B43DC-069D-4B25-916E-44FCFB46137C}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{041B43DC-069D-4B25-916E-44FCFB46137C}.Release|Mixed Platforms.Build.0 = Release|x86
+		{041B43DC-069D-4B25-916E-44FCFB46137C}.Release|x86.ActiveCfg = Release|x86
+		{041B43DC-069D-4B25-916E-44FCFB46137C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

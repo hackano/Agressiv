@@ -5,17 +5,20 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Agress.Core.Commands;
+using Agress.Core.Events;
 using MassTransit;
 using WatiN.Core;
 using WatiN.Core.Comparers;
 using WatiN.Core.Constraints;
 using WatiN.Core.Exceptions;
 using WatiN.Core.Native.Windows;
+using TimeoutException = WatiN.Core.Exceptions.TimeoutException;
 
 namespace Agress.Logic
 {
 	public class MainPresenter : Consumes<ReportAWeekOfTimes>.All, Consumes<ReportTimesForADay>.All
 	{
+		private readonly IServiceBus _Bus;
 		private readonly string _LoginUsername;
 		private readonly string _LoginPassword;
 		private readonly string _LoginClient;
@@ -23,8 +26,15 @@ namespace Agress.Logic
 
 		private IE _Browser;
 
-		public MainPresenter(string loginUsername, string loginPassword, string loginClient, string loginUrl)
+		public MainPresenter(
+			IServiceBus bus,
+			string loginUsername, 
+			string loginPassword, 
+			string loginClient, 
+			string loginUrl)
 		{
+			if (bus == null) throw new ArgumentNullException("bus");
+			_Bus = bus;
 			_LoginUsername = loginUsername;
 			_LoginPassword = loginPassword;
 			_LoginClient = loginClient;
@@ -72,7 +82,13 @@ namespace Agress.Logic
 			passwordField.TypeText(_LoginPassword);
 			loginButton.ClickNoWait();
 
-			TheBrowser.WaitForComplete(5);
+			try
+			{
+				TheBrowser.WaitForComplete(5);
+			}
+			catch (TimeoutException e)
+			{
+			}
 
 			var cell = TheBrowser.TableCell(Find.ByText("Det gick inte att logga in. Kontrollera uppgifterna och försök igen."));
 			
@@ -295,13 +311,21 @@ namespace Agress.Logic
 
 			var line = VerifyLine(command.Data);
 
-			Debug.WriteLine(line);
+			_Bus.Publish(new SingleDayTimeReported());
+
+			Quit();
 		}
 
 		private int VerifyLine(AccountingData data)
 		{
 			var hasLine = HasLine(data);
-			return hasLine.Item1 ? hasLine.Item2.Value : InsertNewLine();
+
+			if (hasLine.Item1)
+			{
+				hasLine.Item3.First().Click();
+				return hasLine.Item2.Value;
+			}
+			return InsertNewLine();
 		}
 
 		private Tuple<bool, int?, IEnumerable<Div>> HasLine(AccountingData rowDataToFind)
@@ -314,9 +338,6 @@ namespace Agress.Logic
 				var projectIdField = TheBrowser.Frame("containerFrame").Div(ctl(2));
 				var activityIdField = TheBrowser.Frame("containerFrame").Div(ctl(3));
 				var roleIdField = TheBrowser.Frame("containerFrame").Div(ctl(5));
-				
-				Debug.WriteLine(timeIdField.Exists);
-
 				var timeCodeId = timeIdField.Text;
 				var projectId = projectIdField.Text.Trim();
 				var activityId = activityIdField.Text.Trim();
@@ -343,6 +364,13 @@ namespace Agress.Logic
 				command.Data.TimeCodeId, command.Data.ProjectId,
 				command.Data.ActivityId, command.Description, command.Data.RoleId,
 				command.WeekHours.ToArray());
+
+			if (command.SaveChanges)
+				SaveTimeSheet();
+
+			_Bus.Publish(new FullWeekReported());
+
+			Quit();
 		}
 
 		private void GotoPeriod(int offset, int periodPart)

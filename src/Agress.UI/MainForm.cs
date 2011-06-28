@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using Agress.Core.Commands;
 using Agress.Logic;
 using Agress.UI.Properties;
 using MassTransit;
-using System.Linq;
 
 namespace Agress.UI
 {
@@ -19,7 +18,8 @@ namespace Agress.UI
 			InitializeComponent();
 
 			var settings = Settings.Default;
-			p = new MainPresenter(settings.Login_Username,
+			p = new MainPresenter(_Bus,
+			                      settings.Login_Username,
 			                      settings.Login_Password,
 			                      settings.Login_Client,
 			                      settings.Login_Url);
@@ -56,7 +56,7 @@ namespace Agress.UI
 		private void buttonReg1_Click(object sender, EventArgs e)
 		{
 			var reg1 = textBoxReg1.Text;
-			
+
 			var strings1 = reg1.Split(';');
 
 
@@ -85,7 +85,7 @@ namespace Agress.UI
 			_Bus.Publish(new ReportAWeekOfTimes(
 			             	strings[3],
 			             	strings.Skip(5).Take(7).Select(double.Parse).ToList(),
-							new AccountingData(strings[0], strings[1], strings[2], int.Parse(strings[4]))
+			             	new AccountingData(strings[0], strings[1], strings[2], int.Parse(strings[4]))
 			             	));
 		}
 

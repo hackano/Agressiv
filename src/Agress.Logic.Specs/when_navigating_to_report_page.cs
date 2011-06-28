@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Linq;
+using Agress.Core;
 using Agress.Core.Commands;
+using Agress.Core.Events;
+using MassTransit;
+using Moq;
 using NUnit.Framework;
 
 namespace Agress.Logic.Specs
@@ -8,11 +12,14 @@ namespace Agress.Logic.Specs
 	public class when_navigating_to_report_page
 	{
 		private MainPresenter driver;
+		private Mock<IServiceBus> _MockBus = new Mock<IServiceBus>();
+
 
 		[SetUp]
 		public void Setup()
 		{
 			driver = new MainPresenter(
+				_MockBus.Object,
 				"henrikfeldt",
 				Password.String,
 				"DS",
@@ -33,9 +40,14 @@ namespace Agress.Logic.Specs
 		[Test, STAThread]
 		public void Try_report_day()
 		{
+			_MockBus.Setup(x => x.Publish((SingleDayTimeReported)null, null))
+				.Verifiable();
+
 			driver.Consume(new ReportTimesForADay(DayOfWeek.Monday, 5.6, "Löpande", 
 				"I did a spike with to make Rhino Security into a message-oriented service.",
 				new AccountingData()));
+
+			//_MockBus.Verify(x => x.Publish(It.IsAny<SingleDayTimeReported>(), It.Is<>(_ => true)));
 		}
 
 		[Test]

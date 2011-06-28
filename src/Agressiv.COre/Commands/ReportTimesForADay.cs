@@ -31,6 +31,11 @@ namespace Agress.Core.Commands
 		/// </summary>
 		public AccountingData Data { get; protected set; }
 
+		/// <summary>
+		/// Whether to save the data in Agresso when handling the command.
+		/// </summary>
+		public bool SaveData { get; protected set; }
+
 
 		protected ReportTimesForADay()
 		{
@@ -38,13 +43,15 @@ namespace Agress.Core.Commands
 
 		public ReportTimesForADay(DayOfWeek whatDay, double hours, string description, 
 			string longDescription,
-			AccountingData data)
+			AccountingData data,
+			bool saveData = false)
 		{
 			Day = whatDay;
 			Hours = hours;
 			Description = description;
 			LongDescription = longDescription;
 			Data = data;
+			SaveData = saveData;
 		}
 	}
 }

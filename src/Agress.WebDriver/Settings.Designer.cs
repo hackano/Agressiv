@@ -37,18 +37,6 @@ namespace Agress.WebDriver {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("6a5w9348w16a89w346s51dfa6938")]
-        public string Login_Password {
-            get {
-                return ((string)(this["Login_Password"]));
-            }
-            set {
-                this["Login_Password"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("DS")]
         public string Login_Client {
             get {
@@ -68,6 +56,18 @@ namespace Agress.WebDriver {
             }
             set {
                 this["Login_Url"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Login_Password {
+            get {
+                return ((string)(this["Login_Password"]));
+            }
+            set {
+                this["Login_Password"] = value;
             }
         }
     }
