@@ -33,8 +33,15 @@ namespace Agress.Logic.Specs
 		[Test]
 		public void Try_report_day()
 		{
-			driver.Consume(new ReportTimesForADay(DayOfWeek.Monday, 5.6, "Löpande", "I did a spike with to make Rhino Security into a message-oriented service.",
+			driver.Consume(new ReportTimesForADay(DayOfWeek.Monday, 5.6, "Löpande", 
+				"I did a spike with to make Rhino Security into a message-oriented service.",
 				new AccountingData()));
+		}
+
+		[Test]
+		public void NAME()
+		{
+			Console.WriteLine((int)DayOfWeek.Monday);
 		}
 	}
 }

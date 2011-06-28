@@ -6,6 +6,7 @@ using Agress.Core.Commands;
 using MassTransit;
 using WatiN.Core;
 using WatiN.Core.Comparers;
+using WatiN.Core.Constraints;
 using WatiN.Core.Exceptions;
 using WatiN.Core.Native.Windows;
 
@@ -282,40 +283,38 @@ namespace Agress.Logic
 				Environment.NewLine, _LoginUrl, Environment.NewLine);
 		}
 
-		public void GotoTimeRegistration1(string[] reg1)
-		{
-			var timeCodeId = reg1[0];
-			var projectId = reg1[1];
-			var activityId = reg1[2];
-			var description = reg1[3];
-			var roleId = int.Parse(reg1[4]);
-			var hours1 = double.Parse(reg1[5]);
-			var hours2 = double.Parse(reg1[6]);
-			var hours3 = double.Parse(reg1[7]);
-			var hours4 = double.Parse(reg1[8]);
-			var hours5 = double.Parse(reg1[9]);
-			var hours6 = double.Parse(reg1[10]);
-			var hours7 = double.Parse(reg1[11]);
-
-			var i = InsertNewLine();
-
-			RegisterProjectDay(i, timeCodeId, projectId, activityId, description, roleId,
-				new[]{hours1, hours2, hours3, hours4, hours5,
-			                   hours6, hours7});
-		}
-
 		public void Consume(ReportTimesForADay command)
 		{
 			if (!IsLoggedIn)
 				LogIn();
 
-			var line = VerifyLine();
+			var line = VerifyLine(command.Data);
 		}
 
-		private int VerifyLine()
+		private int VerifyLine(AccountingData data)
 		{
-			// TODO: code 
-			return InsertNewLine();
+			var hasLine = HasLine(data);
+			return hasLine.Item1 ? hasLine.Item2.Value : InsertNewLine();
+		}
+
+		private Tuple<bool, int?> HasLine(AccountingData rowDataToFind)
+		{
+			for (var rowNo = 0; rowNo < 25; rowNo++)
+			{
+				var frame = TheBrowser.Frame("containerFrame");
+				Func<int, AttributeConstraint> ctl = i => Find.ById(string.Format("b_s10_g10s93__row{0}_ctl0{1}_c", rowNo, i));
+				// b_s10_g10s93__row1_ctl02_c
+				var timeIdField = frame.TextField(ctl(1));
+				var projectIdField = frame.TextField(ctl(2));
+				var activityIdField = frame.TextField(ctl(3));
+				var roleIdField = frame.TextField(ctl(5));
+
+				if (new AccountingData(timeIdField.Text.Trim(), projectIdField.Text.Trim(), activityIdField.Text.Trim(),
+					int.Parse(roleIdField.Text.Trim())).Equals(rowDataToFind))
+					return Tuple.Create(true, new int?(rowNo));
+			}
+
+			return Tuple.Create<bool, int?>(false, null);
 		}
 
 		public void Consume(ReportAWeekOfTimes command)

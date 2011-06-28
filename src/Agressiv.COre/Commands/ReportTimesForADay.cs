@@ -8,7 +8,7 @@ namespace Agress.Core.Commands
 		/// <summary>
 		/// Gets the day of the week to report for.
 		/// </summary>
-		public DayOfWeek WhatDay { get; protected set; }
+		public DayOfWeek Day { get; protected set; }
 
 		/// <summary>
 		/// Gets the number of hours worked this day.
@@ -36,13 +36,13 @@ namespace Agress.Core.Commands
 		{
 		}
 
-		public ReportTimesForADay(DayOfWeek whatDay, double hours, string löpande, 
+		public ReportTimesForADay(DayOfWeek whatDay, double hours, string description, 
 			string longDescription,
 			AccountingData data)
 		{
-			WhatDay = whatDay;
+			Day = whatDay;
 			Hours = hours;
-			Description = löpande;
+			Description = description;
 			LongDescription = longDescription;
 			Data = data;
 		}
