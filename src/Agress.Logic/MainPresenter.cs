@@ -314,8 +314,6 @@ namespace Agress.Logic
 				message.TimeCodeId, message.ProjectId, 
 				message.ActivityId, message.Description, message.RoleId, 
 				message.WeekHours.ToArray());
-
-			
 		}
 
 		private void GotoPeriod(int offset, int periodPart)
