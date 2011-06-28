@@ -24,7 +24,7 @@ namespace Agress.Logic
 		private readonly string _LoginClient;
 		private readonly string _LoginUrl;
 
-		private IE _Browser;
+		private Browser _Browser;
 
 		public MainPresenter(
 			IServiceBus bus,
@@ -41,7 +41,7 @@ namespace Agress.Logic
 			_LoginUrl = loginUrl;
 		}
 
-		public IE TheBrowser
+		public Browser TheBrowser
 		{
 			get
 			{
@@ -49,7 +49,8 @@ namespace Agress.Logic
 				{
 					Settings.AutoMoveMousePointerToTopLeft = false;
 
-					_Browser = new IE(_LoginUrl);
+					//_Browser = new IE(_LoginUrl);
+					_Browser = new FireFox(_LoginUrl);
 					_Browser.ShowWindow(NativeMethods.WindowShowStyle.ShowMaximized);
 				}
 
@@ -304,6 +305,7 @@ namespace Agress.Logic
 				Environment.NewLine, _LoginUrl, Environment.NewLine);
 		}
 
+		[STAThread]
 		public void Consume(ReportTimesForADay command)
 		{
 			if (!IsLoggedIn)
@@ -351,6 +353,7 @@ namespace Agress.Logic
 			return Tuple.Create<bool, int?, IEnumerable<Div>>(false, null, null);
 		}
 
+		[STAThread]
 		public void Consume(ReportAWeekOfTimes command)
 		{
 			if (!IsLoggedIn)
@@ -368,7 +371,7 @@ namespace Agress.Logic
 			if (command.SaveChanges)
 				SaveTimeSheet();
 
-			_Bus.Publish(new FullWeekReported());
+			_Bus.Publish(new FullWeekReported(command.WeekHours));
 
 			Quit();
 		}

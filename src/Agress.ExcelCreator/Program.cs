@@ -1,6 +1,7 @@
 ﻿using System;
 using Agress.Core.Events;
 using MassTransit;
+using log4net.Config;
 
 namespace Agress.ExcelCreator
 {
@@ -18,6 +19,8 @@ namespace Agress.ExcelCreator
 
 		private void Run()
 		{
+			BasicConfigurator.Configure();
+
 			_Bus = ServiceBusFactory.New(sbc =>
 			{
 				sbc.ReceiveFrom("rabbitmq://localhost/Agress.ExcelCreator");

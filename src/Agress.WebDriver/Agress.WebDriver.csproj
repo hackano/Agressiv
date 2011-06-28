@@ -37,7 +37,7 @@
   <ItemGroup>
     <Reference Include="Interop.SHDocVw">
       <HintPath>..\packages\WatiN.2.1.0\lib\net40\Interop.SHDocVw.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>

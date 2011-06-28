@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using MassTransit;
+using log4net.Config;
 
 namespace Agress.UI
 {
@@ -23,9 +24,11 @@ namespace Agress.UI
 
 		private void Run()
 		{
+			BasicConfigurator.Configure();
+
 			_Bus = ServiceBusFactory.New(sbc =>
 			{
-				sbc.ReceiveFrom("rabbitmq://localhost/Agressiv");
+				sbc.ReceiveFrom("rabbitmq://localhost/Agressiv.UI");
 				sbc.UseRabbitMq();
 				sbc.UseRabbitMqRouting();
 			});

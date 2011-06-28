@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using Agress.Core;
 using Agress.Core.Commands;
 using Agress.Core.Events;
@@ -9,6 +10,7 @@ using NUnit.Framework;
 
 namespace Agress.Logic.Specs
 {
+	//[TestFixture(ApartmentState = ApartmentState.STA)] 
 	public class when_navigating_to_report_page
 	{
 		private MainPresenter driver;
@@ -27,7 +29,7 @@ namespace Agress.Logic.Specs
 				);
 		}
 
-		[Test, STAThread]
+		[Test]
 		public void Try_report_week()
 		{
 			driver.Consume(new ReportAWeekOfTimes(
@@ -37,7 +39,7 @@ namespace Agress.Logic.Specs
 			               	));
 		}
 
-		[Test, STAThread]
+		[Test]
 		public void Try_report_day()
 		{
 			_MockBus.Setup(x => x.Publish((SingleDayTimeReported)null, null))
