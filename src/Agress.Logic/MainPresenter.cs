@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -49,8 +48,8 @@ namespace Agress.Logic
 				{
 					Settings.AutoMoveMousePointerToTopLeft = false;
 
-					//_Browser = new IE(_LoginUrl);
-					_Browser = new FireFox(_LoginUrl);
+					_Browser = new IE(_LoginUrl);
+					//_Browser = new FireFox(_LoginUrl);
 					_Browser.ShowWindow(NativeMethods.WindowShowStyle.ShowMaximized);
 				}
 
