@@ -1,26 +1,35 @@
-﻿using System;
+﻿// Copyright 2012 Henrik Feldt
+//  
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
+
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using Agress.Core;
-using Agress.Core.Commands;
-using Agress.Core.Events;
+using Agress.Logic.Specs.Messages;
+using Agress.Messages.Commands;
 using MassTransit;
 using Moq;
 using NUnit.Framework;
 
 namespace Agress.Logic.Specs
 {
-	//[TestFixture(ApartmentState = ApartmentState.STA)] 
 	public class when_navigating_to_report_page
 	{
-		private MainPresenter driver;
-		private Mock<IServiceBus> _MockBus = new Mock<IServiceBus>();
-
+		private MainPresenter _driver;
+		private readonly Mock<IServiceBus> _MockBus = new Mock<IServiceBus>();
 
 		[SetUp]
 		public void Setup()
 		{
-			driver = new MainPresenter(
+			_driver = new MainPresenter(
 				_MockBus.Object,
 				"henrikfeldt",
 				Password.String,
@@ -29,33 +38,33 @@ namespace Agress.Logic.Specs
 				);
 		}
 
-		[Test]
+		[Test, RequiresSTA]
 		public void Try_report_week()
 		{
-			driver.Consume(new ReportAWeekOfTimes(
-			               	"Löpande",
-			               	new[] {4.5, 7, 8, 9}.ToList(),
-							new AccountingData()
-			               	));
+			_driver.Consume(new ReportWeekTimes(
+			                	"Löpande",
+			                	new[] {4.5, 7, 8, 9}.ToList(),
+			                	new AccountingData()
+			                	));
 		}
+	}
 
-		[Test]
-		public void Try_report_day()
+	namespace Messages
+	{
+		internal class ReportWeekTimes
+			: ReportAWeekOfTimes
 		{
-			_MockBus.Setup(x => x.Publish((SingleDayTimeReported)null, null))
-				.Verifiable();
+			public ReportWeekTimes(string description, IEnumerable<double> weekHours, AccountingData data)
+			{
+				Description = description;
+				WeekHours = weekHours;
+				Data = data;
+			}
 
-			driver.Consume(new ReportTimesForADay(DayOfWeek.Monday, 5.6, "Löpande", 
-				"I did a spike with to make Rhino Security into a message-oriented service.",
-				new AccountingData()));
-
-			//_MockBus.Verify(x => x.Publish(It.IsAny<SingleDayTimeReported>(), It.Is<>(_ => true)));
-		}
-
-		[Test]
-		public void NAME()
-		{
-			Console.WriteLine((int)DayOfWeek.Monday);
+			public string Description { get; private set; }
+			public IEnumerable<double> WeekHours { get; private set; }
+			public AccountingData Data { get; private set; }
+			public bool SaveChanges { get; private set; }
 		}
 	}
 }

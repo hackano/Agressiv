@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using Agress.Core.Commands;
-using Agress.Core.Events;
+using Agress.Messages.Commands;
+using Agress.Messages.Events;
 using MassTransit;
 using WatiN.Core;
 using WatiN.Core.Comparers;
@@ -15,49 +15,52 @@ using TimeoutException = WatiN.Core.Exceptions.TimeoutException;
 
 namespace Agress.Logic
 {
-	public class MainPresenter : Consumes<ReportAWeekOfTimes>.All, Consumes<ReportTimesForADay>.All
+	public class MainPresenter
+		: Consumes<ReportAWeekOfTimes>.All,
+		  Consumes<ReportTimesForADay>.All
 	{
-		private readonly IServiceBus _Bus;
-		private readonly string _LoginUsername;
-		private readonly string _LoginPassword;
-		private readonly string _LoginClient;
-		private readonly string _LoginUrl;
+		private readonly IServiceBus _bus;
+		private readonly string _loginUsername;
+		private readonly string _loginPassword;
+		private readonly string _loginClient;
+		private readonly string _loginUrl;
 
-		private Browser _Browser;
+		private Browser _browser;
 
 		public MainPresenter(
 			IServiceBus bus,
-			string loginUsername, 
-			string loginPassword, 
+			string loginUsername,
+			string loginPassword,
 			string loginClient, 
 			string loginUrl)
 		{
 			if (bus == null) throw new ArgumentNullException("bus");
-			_Bus = bus;
-			_LoginUsername = loginUsername;
-			_LoginPassword = loginPassword;
-			_LoginClient = loginClient;
-			_LoginUrl = loginUrl;
+
+			_bus = bus;
+			_loginUsername = loginUsername;
+			_loginPassword = loginPassword;
+			_loginClient = loginClient;
+			_loginUrl = loginUrl;
 		}
 
 		public Browser TheBrowser
 		{
 			get
 			{
-				if (_Browser == null)
+				if (_browser == null)
 				{
 					Settings.AutoMoveMousePointerToTopLeft = false;
 
-					_Browser = new IE(_LoginUrl);
+					_browser = new IE(_loginUrl);
 					//_Browser = new FireFox(_LoginUrl);
-					_Browser.ShowWindow(NativeMethods.WindowShowStyle.ShowMaximized);
+					_browser.ShowWindow(NativeMethods.WindowShowStyle.ShowMaximized);
 				}
 
 				// handle invalid certificate error!
-				if (_Browser.Links.Exists("overridelink"))
-					_Browser.Link("overridelink").Click();
+				if (_browser.Links.Exists("overridelink"))
+					_browser.Link("overridelink").Click();
 
-				return _Browser;
+				return _browser;
 			}
 		}
 
@@ -77,9 +80,9 @@ namespace Agress.Logic
 			var passwordField = TheBrowser.TextField(Find.ById("_password"));
 			var loginButton = TheBrowser.Button(Find.ById("Button1"));
 
-			nameField.TypeText(_LoginUsername);
-			clientField.TypeText(_LoginClient);
-			passwordField.TypeText(_LoginPassword);
+			nameField.TypeText(_loginUsername);
+			clientField.TypeText(_loginClient);
+			passwordField.TypeText(_loginPassword);
 			loginButton.ClickNoWait();
 
 			try
@@ -300,8 +303,8 @@ namespace Agress.Logic
 		public string GetSettingsString()
 		{
 			return string.Format("Name: {0} @ {1}{2}{3}{4}",
-				_LoginUsername, _LoginClient,
-				Environment.NewLine, _LoginUrl, Environment.NewLine);
+				_loginUsername, _loginClient,
+				Environment.NewLine, _loginUrl, Environment.NewLine);
 		}
 
 		[STAThread]
@@ -312,7 +315,7 @@ namespace Agress.Logic
 
 			var line = VerifyLine(command.Data);
 
-			_Bus.Publish(new SingleDayTimeReported());
+			_bus.Publish<SingleDayTimeReported>(new {});
 
 			Quit();
 		}
@@ -370,7 +373,10 @@ namespace Agress.Logic
 			if (command.SaveChanges)
 				SaveTimeSheet();
 
-			_Bus.Publish(new FullWeekReported(command.WeekHours));
+			_bus.Publish<FullWeekReported>(new
+				{
+					Hours = command.WeekHours
+				});
 
 			Quit();
 		}
@@ -424,17 +430,11 @@ namespace Agress.Logic
 		{
 			var currentPeriod = GetCurrentPeriodId();
 			if (currentPeriod.EndsWith("_1"))
-			{
 				GotoPeriod(0, 2);
-			}
 			else if (currentPeriod.EndsWith("_2"))
-			{
 				GotoPeriod(1, 1);
-			}
 			else
-			{
 				GotoPeriod(1, 1);
-			}
 		}
 
 		public void GotoThisPeriod()
@@ -454,7 +454,7 @@ namespace Agress.Logic
 			try
 			{
 				LogOut();
-				_Browser.Close();
+				_browser.Close();
 			}
 			catch
 			{

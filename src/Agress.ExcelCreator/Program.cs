@@ -1,13 +1,13 @@
 ﻿using System;
-using Agress.Core.Events;
+using Agress.Messages.Events;
 using MassTransit;
-using log4net.Config;
+using MassTransit.NLogIntegration;
 
 namespace Agress.ExcelCreator
 {
 	class Program
 	{
-		private IServiceBus _Bus;
+		private IServiceBus _bus;
 
 		private static void Main(string[] args)
 		{
@@ -19,26 +19,26 @@ namespace Agress.ExcelCreator
 
 		private void Run()
 		{
-			BasicConfigurator.Configure();
-
-			_Bus = ServiceBusFactory.New(sbc =>
-			{
-				sbc.ReceiveFrom("rabbitmq://localhost/Agress.ExcelCreator");
-				sbc.Subscribe(s => s.Consumer(() => new Creator(_Bus)).Permanent());
-				sbc.UseRabbitMq();
-				sbc.UseRabbitMqRouting();
-			});
+			_bus = ServiceBusFactory.New(sbc =>
+				{
+					sbc.UseNLog();
+					sbc.ReceiveFrom("rabbitmq://localhost/Agress.ExcelCreator");
+					sbc.Subscribe(s => s.Consumer(() => new Creator(_bus)).Permanent());
+					sbc.UseRabbitMqRouting();
+				});
 		}
 	}
 
-	internal class Creator : Consumes<SingleDayTimeReported>.All, Consumes<FullWeekReported>.All
+	internal class Creator
+		: Consumes<SingleDayTimeReported>.All,
+		  Consumes<FullWeekReported>.All
 	{
-		private readonly IServiceBus _Bus;
+		private readonly IServiceBus _bus;
 
 		public Creator(IServiceBus bus)
 		{
 			if (bus == null) throw new ArgumentNullException("bus");
-			_Bus = bus;
+			_bus = bus;
 		}
 
 		public void Consume(SingleDayTimeReported message)

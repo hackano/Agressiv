@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
-using Agress.Core.Commands;
 using Agress.Logic;
+using Agress.Messages.Commands;
 using Agress.UI.Properties;
 using MassTransit;
+using ReportAWeekOfTimes = Agress.UI.Messages.ReportAWeekOfTimes;
 
 namespace Agress.UI
 {
@@ -82,7 +83,7 @@ namespace Agress.UI
 		private void SendTimeReport(string[] strings)
 		{
 			// todo: send to specific endpoint instead
-			_Bus.Publish(new ReportAWeekOfTimes(
+			_Bus.Publish<ReportAWeekOfTimes>(new ReportAWeekOfTimes(
 			             	strings[3],
 			             	strings.Skip(5).Take(7).Select(double.Parse).ToList(),
 			             	new AccountingData(strings[0], strings[1], strings[2], int.Parse(strings[4]))

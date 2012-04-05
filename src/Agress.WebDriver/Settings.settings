@@ -9,10 +9,10 @@
       <Value Profile="(Default)">DS</Value>
     </Setting>
     <Setting Name="Login_Url" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://economy.waygroup.se/agresso/System/Login.aspx</Value>
+      <Value Profile="(Default)">https://economy.jayway.com/Agresso/System/Login.aspx?ReturnUrl=%2fAgresso%2fDefault.aspx</Value>
     </Setting>
     <Setting Name="Login_Password" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">HEFE</Value>
     </Setting>
   </Settings>
 </SettingsFile>
