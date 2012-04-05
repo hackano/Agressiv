@@ -15,23 +15,9 @@ using WatiN.Core;
 
 namespace Agress.Logic.Pages
 {
-	[PagePath("/agresso/System/Login.aspx")]
-	public class LoginPage
+	public class TravelClaimPage
 		: Page
 	{
-		public TextField UserName
-		{
-			get { return Document.TextField("_name"); }
-		}
-
-		public TextField Password
-		{
-			get { return Document.TextField("_password"); }
-		}
-
-		public void LogIn(Credentials creds)
-		{
-			
-		}
+		
 	}
 }

@@ -42,11 +42,10 @@ namespace Agress.WebDriver
 				sbc.Subscribe(s =>
 				{
 					var sett = Settings.Default;
-					var pwd = sett.Login_Password;
 					s.Consumer(() =>
 						new MainPresenter(_bus,
 							sett.Login_Username,
-							string.IsNullOrEmpty(pwd) ? Password.String : pwd,
+							sett.Login_Password,
 							sett.Login_Client,
 							sett.Login_Url
 						));

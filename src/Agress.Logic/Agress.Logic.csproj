@@ -61,8 +61,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Credentials.cs" />
     <Compile Include="MainPresenter.cs" />
     <Compile Include="Pages\LoginPage.cs" />
+    <Compile Include="Pages\PagePathAttribute.cs" />
+    <Compile Include="Pages\TravelClaimPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

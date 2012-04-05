@@ -29,10 +29,12 @@ namespace Agress.Logic.Specs
 		[SetUp]
 		public void Setup()
 		{
+			var creds = TestFactory.GetCredentialsFromFileOrEnv();
+
 			_driver = new MainPresenter(
 				_MockBus.Object,
-				"henrikfeldt",
-				Password.String,
+				creds.Username,
+				creds.Password,
 				"DS",
 				"https://economy.waygroup.se/agresso/System/Login.aspx"
 				);
