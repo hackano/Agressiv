@@ -17,13 +17,13 @@ using WatiN.Core;
 
 namespace Agress.Logic.Pages
 {
-	[PageFromDriver(typeof(NavigateToTravelClaimPage))]
-	public class TravelClaimPage
+	[PageFromDriver(typeof(NavigateToExpenseClaimPage))]
+	public class ExpenseClaimPage
 		: Page
 	{
 	}
 
-	public class NavigateToTravelClaimPage
+	public class NavigateToExpenseClaimPage
 		: Driver
 	{
 		public void Drive(Browser b)

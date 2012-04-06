@@ -61,6 +61,15 @@ namespace Agress.Logic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reseräkning (DS).
+        /// </summary>
+        public static string ExpenseClaimPage_ExpectedString {
+            get {
+                return ResourceManager.GetString("ExpenseClaimPage_ExpectedString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reseräkning.
         /// </summary>
         public static string LeftMenuPage_ExpenseClaim {
@@ -75,15 +84,6 @@ namespace Agress.Logic {
         public static string LeftMenuPage_TimeAndExpenses {
             get {
                 return ResourceManager.GetString("LeftMenuPage_TimeAndExpenses", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Reseräkning (DS).
-        /// </summary>
-        public static string TravelClaimPage_ExpectedString {
-            get {
-                return ResourceManager.GetString("TravelClaimPage_ExpectedString", resourceCulture);
             }
         }
     }

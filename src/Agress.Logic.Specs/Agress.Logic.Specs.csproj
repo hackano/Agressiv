@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assumptions\logged_in_context.cs" />
+    <Compile Include="Assumptions\when_filling_out_full_expense_claim.cs" />
     <Compile Include="Framework\TestFactory.cs" />
     <Compile Include="Assumptions\when_logging_in.cs" />
     <Compile Include="Assumptions\when_navigating_to_report_page.cs" />

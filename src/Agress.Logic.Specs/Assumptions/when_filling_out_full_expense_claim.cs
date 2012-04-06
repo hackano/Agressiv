@@ -11,28 +11,14 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Agress.Logic.Framework;
-using Agress.Logic.Pages;
 using Machine.Specifications;
-
-// ReSharper disable InconsistentNaming
-// ReSharper disable UnusedMember.Local
 
 namespace Agress.Logic.Specs.Assumptions
 {
-	[Subject("Expense Claim Page")]
-	public class when_navigating_to_expense_claim_page
+	[Subject("Expense Claim Form")]
+	public class when_filling_out_full_expense_claim
 		: logged_in_context
 	{
-		static ExpenseClaimPage page;
-
-		Because of = () =>
-			page = browser.GoToPage<ExpenseClaimPage>(AgressoNamesAndIds.ContainerFrameId);
-	
-		It should_contain_expected_text = () => 
-			page.Document.ContainsText(PageStrings.ExpenseClaimPage_ExpectedString).ShouldBeTrue();
-
-		It should_contain_name_of_person = () =>
-			page.Document.ContainsText(creds.UserName).ShouldBeTrue();
+		
 	}
 }

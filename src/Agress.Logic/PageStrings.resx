@@ -117,14 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ExpenseClaimPage_ExpectedString" xml:space="preserve">
+    <value>Reseräkning (DS)</value>
+    <comment>What should be visible in the travel claim page.</comment>
+  </data>
   <data name="LeftMenuPage_ExpenseClaim" xml:space="preserve">
     <value>Reseräkning</value>
   </data>
   <data name="LeftMenuPage_TimeAndExpenses" xml:space="preserve">
     <value>Tid och utlägg</value>
-  </data>
-  <data name="TravelClaimPage_ExpectedString" xml:space="preserve">
-    <value>Reseräkning (DS)</value>
-    <comment>What should be visible in the travel claim page.</comment>
   </data>
 </root>
