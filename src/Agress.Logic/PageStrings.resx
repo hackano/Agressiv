@@ -137,6 +137,10 @@
     <value>Enbart utlägg</value>
     <comment>The first selected option in the list of expense types.</comment>
   </data>
+  <data name="ExpenseClaimPrintOut_ExpectedHeading" xml:space="preserve">
+    <value>Reseverifikation</value>
+    <comment>This heading should be present in the printed page.</comment>
+  </data>
   <data name="LeftMenuPage_ExpenseClaim" xml:space="preserve">
     <value>Reseräkning</value>
   </data>

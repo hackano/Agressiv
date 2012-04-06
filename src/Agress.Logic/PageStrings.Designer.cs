@@ -106,6 +106,15 @@ namespace Agress.Logic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reseverifikation.
+        /// </summary>
+        public static string ExpenseClaimPrintOut_ExpectedHeading {
+            get {
+                return ResourceManager.GetString("ExpenseClaimPrintOut_ExpectedHeading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reseräkning.
         /// </summary>
         public static string LeftMenuPage_ExpenseClaim {

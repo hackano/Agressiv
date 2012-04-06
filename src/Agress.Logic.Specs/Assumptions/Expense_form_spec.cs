@@ -12,7 +12,9 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
+using System.IO;
 using System.Linq;
+using System.Text;
 using Agress.Logic.Pages;
 using Machine.Specifications;
 using Agress.Logic.Framework;
@@ -130,5 +132,35 @@ namespace Agress.Logic.Specs.Assumptions
 
 		It should_display_saved_text = () =>
 			page.InfoBlock.ShouldContain(PageStrings.ExpenseClaimPage_ExpectedSaveText);
+	}
+
+	[Subject("Expense Claim Form (when done)")]
+	public class when_done_can_print
+		: logged_in_context
+	{
+		static string printedText;
+		static ExpenseClaimPage page;
+
+		Establish context = () =>
+		{
+			page = browser.GoToPage<ExpenseClaimPage>(AgressoNamesAndIds.ContainerFrameId);
+			SampleNavigations.FillOutFirst(page, browser);
+			page.Next1.Click();
+			SampleNavigations.FillOutThird(page);
+			page.Next1.Click();
+			page.SubmitDraft();
+		};
+
+		Because of = () =>
+			{
+				using (var targetStream = new MemoryStream())
+				{
+					page.SaveSupportingDocuments(targetStream);
+					printedText = Encoding.UTF8.GetString(targetStream.ToArray());
+				}
+			};
+
+		It should_have_saved_pdf = () =>
+			printedText.ShouldContain(PageStrings.ExpenseClaimPrintOut_ExpectedHeading);
 	}
 }

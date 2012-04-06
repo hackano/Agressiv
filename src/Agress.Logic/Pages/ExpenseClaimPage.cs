@@ -14,12 +14,21 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using Agress.Logic.Framework;
 using WatiN.Core;
 using System.Linq;
 
 namespace Agress.Logic.Pages
 {
+	// I hate that this page is so long; but it is really only 
+	// a single responsibility in it; the expense page.
+
+	// I can only imagine how long the code-behind page of the ASPX file
+	// is in Agresso!! Programmers must go there to die!
+
 	[PageFromDriver(typeof(NavigateToExpenseClaimPage))]
 	public class ExpenseClaimPage
 		: Page
@@ -187,6 +196,25 @@ namespace Agress.Logic.Pages
 					         !string.IsNullOrWhiteSpace(el.Text)
 					         && el.Text.Contains(PageStrings.ExpenseClaimPage_ExpectedSaveText))
 					.Text;
+			}
+		}
+
+		Div PreviewPrintout
+		{
+			get { return Document.Div(Find.ByName("b$printpreview")); }
+		}
+
+		public void SaveSupportingDocuments(Stream targetStream)
+		{
+			PreviewPrintout.Click(); //Clicking this button will open a new window and a print dialog
+			// https://economy.jayway.com/Agresso/System/printpreview.aspx
+			// ?instanceid=92e61093969b42c1jjj49b3dbc960&framename=TTT002&client=DS&interface=Agresso.Interface.Travel.ITravelExpense&assembly=Agresso.Interface.Travel
+			Browser popup = Browser.AttachTo<IE>(Find.ByUrl(new Regex(".+printpreview.aspx"))); //Match url ending in "_CoverPage.aspx"
+
+			using (var writer = new StreamWriter(targetStream, Encoding.UTF8))
+			{
+				writer.Write(popup.ActiveElement.Parent.OuterHtml);
+				writer.Flush();
 			}
 		}
 
