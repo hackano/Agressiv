@@ -39,7 +39,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AccountingData.cs" />
-    <Compile Include="Commands\RegisterExpense.cs" />
+    <Compile Include="Commands\RegisterAccessoryExpense.cs" />
+    <Compile Include="Commands\RegisterKnowledgeActivityExpense.cs" />
     <Compile Include="Commands\ReportAWeekOfTimes.cs" />
     <Compile Include="Commands\ReportTimesForADay.cs" />
     <Compile Include="Events\FullWeekReported.cs" />

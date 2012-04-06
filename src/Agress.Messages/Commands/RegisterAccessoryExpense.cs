@@ -33,22 +33,4 @@ namespace Agress.Messages.Commands
 		/// </summary>
 		double Amount { get; }
 	}
-
-	public interface RegisterKnowledgeActivityExpense
-	{
-		/// <summary>
-		/// Why did you have this expense? What was it for?
-		/// </summary>
-		string Cause { get; }
-
-		/// <summary>
-		/// Expense description and otherwise clarifying comment.
-		/// </summary>
-		string Comment { get; }
-
-		/// <summary>
-		/// The cost including value added tax, of the expense.
-		/// </summary>
-		double Amount { get; }
-	}
 }
