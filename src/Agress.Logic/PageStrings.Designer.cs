@@ -61,11 +61,47 @@ namespace Agress.Logic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kontering.
+        /// </summary>
+        public static string ExpenseClaimPage_AccountingLabel {
+            get {
+                return ResourceManager.GetString("ExpenseClaimPage_AccountingLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Raderna har sparats. Verifikationsnummer.
+        /// </summary>
+        public static string ExpenseClaimPage_ExpectedSaveText {
+            get {
+                return ResourceManager.GetString("ExpenseClaimPage_ExpectedSaveText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reseräkning (DS).
         /// </summary>
         public static string ExpenseClaimPage_ExpectedString {
             get {
                 return ResourceManager.GetString("ExpenseClaimPage_ExpectedString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3 - Utlägg.
+        /// </summary>
+        public static string ExpenseClaimPage_ExpenseTab {
+            get {
+                return ResourceManager.GetString("ExpenseClaimPage_ExpenseTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enbart utlägg.
+        /// </summary>
+        public static string ExpenseClaimPage_TypeOfExpense_Expense {
+            get {
+                return ResourceManager.GetString("ExpenseClaimPage_TypeOfExpense_Expense", resourceCulture);
             }
         }
         

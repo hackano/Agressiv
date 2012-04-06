@@ -77,7 +77,7 @@
     <Compile Include="Pages\LoginPage.cs" />
     <Compile Include="Framework\PageFromDriverAttribute.cs" />
     <Compile Include="Framework\PagePathAttribute.cs" />
-    <Compile Include="Pages\TravelClaimPage.cs" />
+    <Compile Include="Pages\ExpenseClaimPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

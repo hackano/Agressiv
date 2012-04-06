@@ -11,14 +11,19 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Machine.Specifications;
+using System.Globalization;
+using NUnit.Framework;
 
-namespace Agress.Logic.Specs.Assumptions
+namespace Agress.Logic.Specs
 {
-	[Subject("Expense Claim Form")]
-	public class when_filling_out_full_expense_claim
-		: logged_in_context
+	public class FormattingDoubleTests
 	{
-		
+		[Test]
+		public void Format_to_double_zeroes()
+		{
+			Assert.That(
+				567.556.ToString("0.00", new CultureInfo("en-US")),
+				Is.EqualTo("567.56"));
+		}
 	}
 }

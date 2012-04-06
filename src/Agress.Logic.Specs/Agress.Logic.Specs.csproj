@@ -76,10 +76,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assumptions\logged_in_context.cs" />
-    <Compile Include="Assumptions\when_filling_out_full_expense_claim.cs" />
+    <Compile Include="Assumptions\Expense_form_spec.cs" />
+    <Compile Include="FormattingDoubleTests.cs" />
     <Compile Include="Framework\TestFactory.cs" />
     <Compile Include="Assumptions\when_logging_in.cs" />
-    <Compile Include="Assumptions\when_navigating_to_report_page.cs" />
     <Compile Include="Messages\ReportWeekTimes.cs" />
     <Compile Include="PagePathAttributeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
