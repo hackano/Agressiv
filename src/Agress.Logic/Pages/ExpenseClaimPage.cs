@@ -153,25 +153,44 @@ namespace Agress.Logic.Pages
 			get { return Document.Button("b_s15_s53__cb53-428"); }
 		}
 
-		public string InfoBlock
-		{
-			get {
-				return Document
-					.Element(el =>
-						!string.IsNullOrWhiteSpace(el.Text)
-						&& el.Text.Contains(PageStrings.ExpenseClaimPage_ExpectedSaveText))
-					.Text; 
-			}
-		}
+		#region Fourth Tab
 
 		public void SubmitDraft()
 		{
+			SubmitWithValue("0");
+		}
+
+		public void SubmitReady()
+		{
+			SubmitWithValue("1");
+		}
+
+		void SubmitWithValue(string selectedValue)
+		{
 			Document.SelectList("b_s16_l4s16_ctl00_confirm_flag_descr_i")
-				.SelectByValue("0");
+				.SelectByValue(selectedValue);
 
 			Document.Div(Find.ByName("b$_item_save"))
 				.Click();
 		}
+
+		#endregion
+
+		#region Saved Info Block
+
+		public string InfoBlock
+		{
+			get
+			{
+				return Document
+					.Element(el =>
+					         !string.IsNullOrWhiteSpace(el.Text)
+					         && el.Text.Contains(PageStrings.ExpenseClaimPage_ExpectedSaveText))
+					.Text;
+			}
+		}
+
+		#endregion
 	}
 
 
