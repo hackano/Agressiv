@@ -75,10 +75,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assumptions\logged_in_context.cs" />
     <Compile Include="Framework\TestFactory.cs" />
-    <Compile Include="when_logging_in.cs" />
-    <Compile Include="when_navigating_to_report_page.cs" />
+    <Compile Include="Assumptions\when_logging_in.cs" />
+    <Compile Include="Assumptions\when_navigating_to_report_page.cs" />
+    <Compile Include="Messages\ReportWeekTimes.cs" />
+    <Compile Include="PagePathAttributeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="when_performing_a_travel_claim.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -61,20 +61,34 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgressoNamesAndIds.cs" />
     <Compile Include="BaseUri.cs" />
     <Compile Include="Credentials.cs" />
     <Compile Include="Framework\BrowserExtensions.cs" />
     <Compile Include="Framework\ElementExtensions.cs" />
     <Compile Include="MainPresenter.cs" />
+    <Compile Include="PageStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PageStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Framework\Driver.cs" />
+    <Compile Include="Pages\LeftMenu.cs" />
     <Compile Include="Pages\LoginPage.cs" />
-    <Compile Include="Pages\PagePathAttribute.cs" />
+    <Compile Include="Framework\PageFromDriverAttribute.cs" />
+    <Compile Include="Framework\PagePathAttribute.cs" />
     <Compile Include="Pages\TravelClaimPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="PageStrings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>PageStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Agress.Messages\Agress.Messages.csproj">
       <Project>{E97141B2-747D-4EF7-A2F8-F2D7F7380407}</Project>

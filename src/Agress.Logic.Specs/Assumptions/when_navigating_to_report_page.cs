@@ -13,29 +13,26 @@
 
 using Agress.Logic.Framework;
 using Agress.Logic.Pages;
-using Agress.Logic.Specs.Framework;
 using Machine.Specifications;
-using WatiN.Core;
 
 // ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Local
 
-namespace Agress.Logic.Specs
+namespace Agress.Logic.Specs.Assumptions
 {
-	public class when_logging_in
+	[Subject("Travel Claim Page")]
+	public class when_navigating_to_report_page
+		: logged_in_context
 	{
-		Establish context = () =>
-			{
-				browser = new IE();
-				page = browser.GoToPage<LoginPage>();
-			};
+		static TravelClaimPage page;
 
-		static LoginPage page;
-		static Browser browser;
+		Because of = () =>
+			page = browser.GoToPage<TravelClaimPage>(AgressoNamesAndIds.ContainerFrameId);
+	
+		It should_contain_expected_text = () => 
+			page.Document.ContainsText(PageStrings.TravelClaimPage_ExpectedString).ShouldBeTrue();
 
-		Because of = () => 
-			page.LogIn(TestFactory.GetCredentialsFromFileOrEnv());
-
-		It should_navigate_to_the_default_page = () => 
-			browser.Url.ShouldEndWith("Agresso/Default.aspx?type=topgen&menu_id=TS294");
+		It should_contain_name_of_person = () =>
+			page.Document.ContainsText(creds.UserName).ShouldBeTrue();
 	}
 }

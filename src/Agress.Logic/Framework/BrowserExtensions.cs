@@ -12,30 +12,46 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
-using Agress.Logic.Pages;
 using WatiN.Core;
 using System.Linq;
+using TimeoutException = WatiN.Core.Exceptions.TimeoutException;
 
 namespace Agress.Logic.Framework
 {
 	public static class BrowserExtensions
 	{
-		public static T GoToPage<T>(this Browser b)
+		public static T GoToPage<T>(this Browser b, string frame = null)
 			where T : Page, new()
 		{
-			var attr = typeof(T)
-				.GetCustomAttributes(typeof(PagePathAttribute), true)
-				.FirstOrDefault()
-				as PagePathAttribute;
+			var attr = GetPageDriver<T>();
+			
+			AssertNonNull<T>(attr);
 
+			try { b.WaitForComplete(2); } catch (TimeoutException) {}
+			attr.Drive(b);
+
+			return frame == null ? b.Page<T>() : b.Frame(frame).Page<T>();
+		}
+
+		static void AssertNonNull<T>(Driver attr) where T : Page, new()
+		{
 			if (attr == null)
-				throw new ArgumentException(string.Format("Argument generic type {0}, ", typeof(T).Name) +
+				throw new ArgumentException(string.Format("Argument generic type {0}, ", typeof (T).Name) +
 				                            "doesn't have an attribute '" +
-				                            typeof(PagePathAttribute).Name + "' specified.");
+				                            typeof (PagePathAttribute).Name + "', or '" +
+				                            typeof(PageFromDriverAttribute).Name + "' specified!");
+		}
 
-			b.GoTo(attr.Url);
+		static Driver GetPageDriver<T>()
+		{
+			var pp = typeof (T).GetCustomAttributes(typeof (PagePathAttribute), true).FirstOrDefault() as PagePathAttribute;
+			
+			return pp ?? GetDriver<T>();
+		}
 
-			return b.Page<T>();
+		static Driver GetDriver<T>()
+		{
+			return typeof (T).GetCustomAttributes(typeof (PageFromDriverAttribute), true).FirstOrDefault() as Driver;
 		}
 	}
 }
