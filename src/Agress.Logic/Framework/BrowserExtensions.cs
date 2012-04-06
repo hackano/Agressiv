@@ -16,7 +16,7 @@ using Agress.Logic.Pages;
 using WatiN.Core;
 using System.Linq;
 
-namespace Agress.Logic.Specs.Framework
+namespace Agress.Logic.Framework
 {
 	public static class BrowserExtensions
 	{

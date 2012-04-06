@@ -11,31 +11,19 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Agress.Logic.Framework;
-using Agress.Logic.Pages;
-using Agress.Logic.Specs.Framework;
-using Machine.Specifications;
-using WatiN.Core;
+using System;
 
-// ReSharper disable InconsistentNaming
-
-namespace Agress.Logic.Specs
+namespace Agress.Logic
 {
-	public class when_logging_in
+	public static class BaseUri
 	{
-		Establish context = () =>
+		public static Uri Uri
+		{
+			get
 			{
-				browser = new IE();
-				page = browser.GoToPage<LoginPage>();
-			};
-
-		static LoginPage page;
-		static Browser browser;
-
-		Because of = () => 
-			page.LogIn(TestFactory.GetCredentialsFromFileOrEnv());
-
-		It should_navigate_to_the_default_page = () => 
-			browser.Url.ShouldEndWith("Agresso/Default.aspx?type=topgen&menu_id=TS294");
+				return new Uri(Environment.GetEnvironmentVariable("AGRESSO_BASEURI")
+				               ?? "http://economy.jayway.com/");
+			}
+		}
 	}
 }

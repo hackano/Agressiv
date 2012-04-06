@@ -61,7 +61,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseUri.cs" />
     <Compile Include="Credentials.cs" />
+    <Compile Include="Framework\BrowserExtensions.cs" />
+    <Compile Include="Framework\ElementExtensions.cs" />
     <Compile Include="MainPresenter.cs" />
     <Compile Include="Pages\LoginPage.cs" />
     <Compile Include="Pages\PagePathAttribute.cs" />

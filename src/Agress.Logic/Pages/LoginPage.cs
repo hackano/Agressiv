@@ -11,6 +11,7 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using Agress.Logic.Framework;
 using WatiN.Core;
 
 namespace Agress.Logic.Pages
@@ -29,9 +30,17 @@ namespace Agress.Logic.Pages
 			get { return Document.TextField("_password"); }
 		}
 
+		public TextField Client
+		{
+			get { return Document.TextField("_client"); }
+		}
+
 		public void LogIn(Credentials creds)
 		{
-			
+			UserName.Value = creds.UserName;
+			Password.Value = creds.Password;
+			Client.Value = "DS";
+			Client.FindParent<Form>().Submit();
 		}
 	}
 }

@@ -13,6 +13,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Agress.Logic.Specs.Framework;
 using Agress.Logic.Specs.Messages;
 using Agress.Messages.Commands;
 using MassTransit;
@@ -33,7 +34,7 @@ namespace Agress.Logic.Specs
 
 			_driver = new MainPresenter(
 				_MockBus.Object,
-				creds.Username,
+				creds.UserName,
 				creds.Password,
 				"DS",
 				"https://economy.waygroup.se/agresso/System/Login.aspx"

@@ -17,7 +17,7 @@ namespace Agress.Logic
 {
 	public interface Credentials
 	{
-		string Username { get; }
+		string UserName { get; }
 		string Password { get; }
 	}
 
@@ -39,14 +39,14 @@ namespace Agress.Logic
 			_password = password;
 		}
 
-		public string Username
+		public string UserName
 		{
-			get { return ENV("USERNAME") ?? _username; }
+			get { return ENV("AGRESSO_USERNAME") ?? _username; }
 		}
 
 		public string Password
 		{
-			get { return ENV("PASSWORD") ?? _password; }
+			get { return ENV("AGRESSO_PASSWORD") ?? _password; }
 		}
 
 		private static string ENV(string envKey)

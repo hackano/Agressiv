@@ -9,10 +9,14 @@ namespace Agress.Logic.Pages
 	{
 		readonly Uri _url;
 
-		public PagePathAttribute([NotNull] string url)
+		public PagePathAttribute([NotNull] string path)
 		{
-			if (url == null) throw new ArgumentNullException("url");
-			_url = new Uri(url);
+			if (path == null) throw new ArgumentNullException("path");
+			var builder = new UriBuilder(BaseUri.Uri)
+				{
+					Path = path
+				};
+			_url = builder.Uri;
 		}
 
 		/// <summary>
