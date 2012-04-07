@@ -115,6 +115,24 @@ namespace Agress.Logic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Period.
+        /// </summary>
+        public static string ExpenseClaimPrintOut_PeriodAbbr {
+            get {
+                return ResourceManager.GetString("ExpenseClaimPrintOut_PeriodAbbr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ver.nr.
+        /// </summary>
+        public static string ExpenseClaimPrintOut_VoucherNoAbbr {
+            get {
+                return ResourceManager.GetString("ExpenseClaimPrintOut_VoucherNoAbbr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reseräkning.
         /// </summary>
         public static string LeftMenuPage_ExpenseClaim {

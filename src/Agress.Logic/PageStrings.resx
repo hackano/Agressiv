@@ -141,6 +141,14 @@
     <value>Reseverifikation</value>
     <comment>This heading should be present in the printed page.</comment>
   </data>
+  <data name="ExpenseClaimPrintOut_PeriodAbbr" xml:space="preserve">
+    <value>Period</value>
+    <comment>The small abbreviated text to the top right of the print out.</comment>
+  </data>
+  <data name="ExpenseClaimPrintOut_VoucherNoAbbr" xml:space="preserve">
+    <value>Ver.nr</value>
+    <comment>The small abbreviated text to the top right of the print out.</comment>
+  </data>
   <data name="LeftMenuPage_ExpenseClaim" xml:space="preserve">
     <value>Reseräkning</value>
   </data>

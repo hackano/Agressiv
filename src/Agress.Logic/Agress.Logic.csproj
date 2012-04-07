@@ -73,6 +73,7 @@
       <DependentUpon>PageStrings.resx</DependentUpon>
     </Compile>
     <Compile Include="Framework\Driver.cs" />
+    <Compile Include="Pages\ExpenseVoucherPage.cs" />
     <Compile Include="Pages\LeftMenu.cs" />
     <Compile Include="Pages\LoginPage.cs" />
     <Compile Include="Framework\PageFromDriverAttribute.cs" />

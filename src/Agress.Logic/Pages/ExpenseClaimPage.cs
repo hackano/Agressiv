@@ -113,7 +113,8 @@ namespace Agress.Logic.Pages
 		#endregion
 
 		public void AddRow(string selectValue,
-			DateTime expenseDate, string expenseDescription, double expenseAmount)
+			DateTime expenseDate, string expenseDescription, 
+			double expenseAmount)
 		{
 			if (Math.Abs(expenseAmount - 0.0) < 0.0001)
 				throw new ArgumentException("Zero amount", "expenseAmount");
@@ -169,7 +170,7 @@ namespace Agress.Logic.Pages
 			SubmitWithValue("0");
 		}
 
-		public void SubmitReady()
+		public void SubmitFinal()
 		{
 			SubmitWithValue("1");
 		}
@@ -204,7 +205,7 @@ namespace Agress.Logic.Pages
 			get { return Document.Div(Find.ByName("b$printpreview")); }
 		}
 
-		public void SaveSupportingDocuments(Stream targetStream)
+		public ExpenseVoucherPage SaveSupportingDocuments(Stream targetStream)
 		{
 			PreviewPrintout.Click(); //Clicking this button will open a new window and a print dialog
 			// https://economy.jayway.com/Agresso/System/printpreview.aspx
@@ -216,6 +217,10 @@ namespace Agress.Logic.Pages
 				writer.Write(popup.ActiveElement.Parent.OuterHtml);
 				writer.Flush();
 			}
+
+			var page = popup.Page<ExpenseVoucherPage>();
+			page.SetBrowser(popup);
+			return page;
 		}
 
 		#endregion

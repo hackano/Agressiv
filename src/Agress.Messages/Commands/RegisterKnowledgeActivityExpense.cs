@@ -29,5 +29,12 @@ namespace Agress.Messages.Commands
 		/// 	The cost including value added tax, of the expense.
 		/// </summary>
 		double Amount { get; }
+
+		long Epoch { get; }
+
+		/// <summary>
+		/// Whether to NOT just save as draft, but to mark the report as 'Done'.
+		/// </summary>
+		bool SubmitFinal { get; }
 	}
 }
