@@ -30,6 +30,9 @@ namespace Agress.Logic.Specs.Assumptions
 				page = browser.GoToPage<LoginPage>();
 			};
 
+		Cleanup afterwards = () =>
+			browser.Dispose();
+
 		static LoginPage page;
 		static Browser browser;
 
@@ -38,5 +41,10 @@ namespace Agress.Logic.Specs.Assumptions
 
 		It should_navigate_to_the_default_page = () => 
 			browser.Url.ShouldEndWith("Agresso/Default.aspx?type=topgen&menu_id=TS294");
+
+		It should_contain_expected_time_report_text = () =>
+			browser.Frame(AgressoNamesAndIds.ContainerFrameId)
+				.ContainsText(PageStrings.TimeReportPage_ExpectedTitle)
+				.ShouldBeTrue();
 	}
 }

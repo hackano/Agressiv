@@ -47,9 +47,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Magnum.2.0.0.4\lib\NET40\Magnum.dll</HintPath>
     </Reference>
+    <Reference Include="Magnum.TestFramework">
+      <HintPath>..\packages\MassTransit.TestFramework.2.1.0-prerelease\lib\net40\Magnum.TestFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MassTransit, Version=2.1.410.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MassTransit.2.1.1\lib\net40\MassTransit.dll</HintPath>
+    </Reference>
+    <Reference Include="MassTransit.Transports.MSMQ">
+      <HintPath>..\packages\MassTransit.2.1.1\lib\net40\MassTransit.Transports.MSMQ.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
