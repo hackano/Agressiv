@@ -155,12 +155,13 @@ namespace Agress.Logic.Specs.Assumptions
 			{
 				using (var targetStream = new MemoryStream())
 				{
-					page.SaveSupportingDocuments(targetStream);
+					var popup = page.SaveSupportingDocuments(targetStream);
 					printedText = Encoding.UTF8.GetString(targetStream.ToArray());
+					popup.Dispose();
 				}
 			};
 
-		It should_have_saved_pdf = () =>
+		It should_have_gotten_text = () =>
 			printedText.ShouldContain(PageStrings.ExpenseClaimPrintOut_ExpectedHeading);
 	}
 }

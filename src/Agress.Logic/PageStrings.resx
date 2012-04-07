@@ -155,4 +155,12 @@
   <data name="LeftMenuPage_TimeAndExpenses" xml:space="preserve">
     <value>Tid och utlägg</value>
   </data>
+  <data name="SessionExpiryText" xml:space="preserve">
+    <value>Your current session has expired</value>
+    <comment>Text that is shown when session is expired</comment>
+  </data>
+  <data name="TimeReportPage_ExpectedTitle" xml:space="preserve">
+    <value>Daglig tidregistrering (DS)</value>
+    <comment>Expected text on first page after logging in.</comment>
+  </data>
 </root>

@@ -149,5 +149,23 @@ namespace Agress.Logic {
                 return ResourceManager.GetString("LeftMenuPage_TimeAndExpenses", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your current session has expired.
+        /// </summary>
+        public static string SessionExpiryText {
+            get {
+                return ResourceManager.GetString("SessionExpiryText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Daglig tidregistrering (DS).
+        /// </summary>
+        public static string TimeReportPage_ExpectedTitle {
+            get {
+                return ResourceManager.GetString("TimeReportPage_ExpectedTitle", resourceCulture);
+            }
+        }
     }
 }

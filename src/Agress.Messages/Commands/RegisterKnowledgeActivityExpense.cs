@@ -30,6 +30,9 @@ namespace Agress.Messages.Commands
 		/// </summary>
 		double Amount { get; }
 
+		/// <summary>
+		/// When?
+		/// </summary>
 		long Epoch { get; }
 
 		/// <summary>

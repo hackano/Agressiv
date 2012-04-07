@@ -11,6 +11,7 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using System;
 using System.Threading;
 using Agress.Logic.Framework;
 using WatiN.Core;
@@ -41,6 +42,33 @@ namespace Agress.Logic.Pages
 			get { return Document.Button("Button1"); }
 		}
 
+		private bool HasContainerFrame()
+		{
+			return ProtectedAgainstUninitializedPages(() => 
+				Document.Element(Find.ById(AgressoNamesAndIds.ContainerFrameId)).Exists);
+		}
+
+		private bool OnFirstPage()
+		{
+			SpinWait.SpinUntil(HasContainerFrame);
+			return ProtectedAgainstUninitializedPages(() => 
+				Document.Frame(AgressoNamesAndIds.ContainerFrameId)
+					.TableCell(Find.ByText(PageStrings.TimeReportPage_ExpectedTitle))
+					.Exists);
+		}
+
+		private static T ProtectedAgainstUninitializedPages<T>(Func<T> action, T def = default(T))
+		{
+			try
+			{
+				return action();
+			}
+			catch (UnauthorizedAccessException)
+			{
+				return def;
+			}
+		}
+
 		public void LogIn(Credentials creds)
 		{
 			if (Document.Elements.Exists(Find.ByName("menuButtons$_logout"))
@@ -51,6 +79,8 @@ namespace Agress.Logic.Pages
 			Password.Value = creds.Password;
 			Client.Value = AgressoNamesAndIds.AlwaysThisClient;
 			Submit.ClickNoWait();
+
+			SpinWait.SpinUntil(OnFirstPage);
 		}
 	}
 }

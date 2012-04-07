@@ -44,6 +44,11 @@ namespace Agress.Logic.Framework
 
 		public void Drive(Browser b)
 		{
+			if (b.Frames.Exists(Find.ById(AgressoNamesAndIds.ContainerFrameId))
+				&& b.Frame(AgressoNamesAndIds.ContainerFrameId).ContainsText(
+					PageStrings.SessionExpiryText))
+				b.Button("button").Click(); // lol
+
 			b.GoTo(Url);
 		}
 	}
