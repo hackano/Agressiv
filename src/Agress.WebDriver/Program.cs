@@ -120,17 +120,18 @@ namespace Agress.WebDriver
 
 						using (var ms = new MemoryStream())
 						{
-							var popup = expense.SaveSupportingDocuments(ms);
+							using (var popup = expense.SaveSupportingDocuments(ms))
+							{
+								var evt = new KnowledgeActivityReplyEvent
+									{
+										Period = popup.Period, 
+										VoucherNumber = popup.VoucherNo, 
+										Voucher = ms.ToArray()
+									};
 
-							var evt = new KnowledgeActivityReplyEvent
-								{
-									Period = popup.Period, 
-									VoucherNumber = popup.VoucherNo, 
-									Voucher = ms.ToArray()
-								};
-
-							context.Respond<KnowledgeActivityRegistered>(evt);
-							_bus.Publish(evt);
+								context.Respond<KnowledgeActivityRegistered>(evt);
+								_bus.Publish(evt);
+							}
 						}
 					}
 				}));
