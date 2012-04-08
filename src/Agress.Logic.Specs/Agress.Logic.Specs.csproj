@@ -89,7 +89,6 @@
     <Compile Include="Messages\ReportWeekTimes.cs" />
     <Compile Include="PagePathAttributeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="when_performing_a_travel_claim.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

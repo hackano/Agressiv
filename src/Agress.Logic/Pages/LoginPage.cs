@@ -18,7 +18,20 @@ using WatiN.Core;
 
 namespace Agress.Logic.Pages
 {
-	[PagePath("/agresso/System/Login.aspx")]
+	class ClickThroughSessionExpired
+		: Driver
+	{
+		public void Drive(Browser b)
+		{
+			b.WaitForComplete();
+
+			if (b.Frames.Exists(Find.ById(AgressoNamesAndIds.ContainerFrameId))
+				&& b.Frame(AgressoNamesAndIds.ContainerFrameId).ContainsText(PageStrings.SessionExpiryText))
+				b.Button("button").Click(); // lol
+		}
+	}
+
+	[PagePath("/agresso/System/Login.aspx", typeof(ClickThroughSessionExpired))]
 	public class LoginPage
 		: Page
 	{
@@ -59,14 +72,8 @@ namespace Agress.Logic.Pages
 
 		private static T ProtectedAgainstUninitializedPages<T>(Func<T> action, T def = default(T))
 		{
-			try
-			{
-				return action();
-			}
-			catch (UnauthorizedAccessException)
-			{
-				return def;
-			}
+			try { return action(); }
+			catch (UnauthorizedAccessException) { return def; }
 		}
 
 		public void LogIn(Credentials creds)

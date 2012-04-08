@@ -77,6 +77,7 @@ namespace Agress.Logic.Pages
 						new ExpenseRow
 							{
 								Type = r.Div(string.Format("b_g3s14__row{0}_ctl00_c", index)).Text,
+								WageArticle = r.Div(string.Format("b_g3s14__row{0}_ctl01_c", index)).Text,
 								Description = r.Div(string.Format("b_g3s14__row{0}_ctl02_c", index)).Text,
 								Multiplier = double.Parse(r.Div(string.Format("b_g3s14__row{0}_ctl03_c", index)).Text),
 								Amount = double.Parse(r.Div(string.Format("b_g3s14__row{0}_ctl04_c", index)).Text),
@@ -116,16 +117,22 @@ namespace Agress.Logic.Pages
 			DateTime expenseDate, string expenseDescription, 
 			double expenseAmount)
 		{
+			AddSimpleExpenseInner(selectValue, expenseDate, expenseDescription, expenseAmount);
+			DoneWithRows();
+		}
+
+		void AddSimpleExpenseInner(string selectValue, DateTime expenseDate, string expenseDescription, double expenseAmount)
+		{
 			if (Math.Abs(expenseAmount - 0.0) < 0.0001)
 				throw new ArgumentException("Zero amount", "expenseAmount");
-			
+
 			AddRowButton.Click();
 			ExpenseTypeThirdTab.SelectByValue(selectValue);
 			Date.Value = expenseDate.ToString("d", _swedishCulture);
 
 			if (!string.IsNullOrWhiteSpace(expenseDescription))
 				ExpenseDesc.Value = expenseDescription;
-			
+
 			Amount.Value = expenseAmount.ToString("0.00", _swedishCulture);
 		}
 
@@ -137,24 +144,38 @@ namespace Agress.Logic.Pages
 		public void AddRepresentationInternal(DateTime expenseDate,
 			string expenseDescription, double expenseAmount)
 		{
-			AddSimpleExpense("REPTOTINT", expenseDate, expenseDescription, expenseAmount);
+			AddSimpleExpenseInner("REPTOTINT", expenseDate, expenseDescription, expenseAmount);
 			ProjectForExpense.Value = 10003.ToString(_swedishCulture);
 			UpdateAllPosts.Click();
+			DistributeCosts();
+		}
+
+		void DistributeCosts()
+		{
+			Document.Button("b_s15__cb15-164").Click();
 		}
 
 		public class ExpenseRow
 		{
+			/// <summary>Index 0</summary>
 			public string Type { get; set; }
+			/// <summary>Index 1</summary>
+			public string WageArticle { get; set; }
+			/// <summary>Index 2</summary>
 			public string Description { get; set; }
+			/// <summary>Index 3</summary>
 			public double Multiplier { get; set; }
+			/// <summary>Index 4</summary>
 			public double Amount { get; set; }
+
+			/// <summary>Gets the actual table row</summary>
 			public Func<TableRow> Getter { get; set; }
 		}
 
 		/// <summary>
 		/// Clicks the 'Update posts' button that allows you to move to the next view.
 		/// </summary>
-		public void DoneWithRows()
+		private void DoneWithRows()
 		{
 			AccountingGroup.Click();
 			UpdateAllPosts.Click();

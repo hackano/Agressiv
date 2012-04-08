@@ -41,7 +41,6 @@ namespace Agress.Logic.Specs.Assumptions
 		public static void FillOutThird(ExpenseClaimPage page)
 		{
 			page.AddSimpleExpense("DATORTILL", DateTime.UtcNow, "Datortillbehörsutlägg", 1.0);
-			page.DoneWithRows();
 		}
 	}
 
@@ -98,7 +97,6 @@ namespace Agress.Logic.Specs.Assumptions
 		Because of = () =>
 			{
 				page.AddSimpleExpense("DATORTILL", DateTime.UtcNow, ExpenseDescription, 567.0);
-				page.DoneWithRows();
 				subjectRow = page.ExpenseTable.First();
 			};
 
@@ -125,11 +123,13 @@ namespace Agress.Logic.Specs.Assumptions
 				page.Next1.Click();
 			};
 
-		Because of = () =>
-			{
-				page.AddRepresentationInternal("REPTOTINT", DateTime.UtcNow, ExpenseDescription, 11.00);
-				
-			};
+		Because of = () => 
+			page.AddRepresentationInternal(DateTime.UtcNow, "Purchased a falafel", 11.00);
+
+		It should_display_wage_article_number = () =>
+			page.ExpenseTable.First()
+				.WageArticle
+				.ShouldEqual("7008");
 	}
 
 	[Subject("Expense Claim Form (4th page)")]

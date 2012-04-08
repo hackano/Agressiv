@@ -31,6 +31,7 @@ namespace Agress.Logic.Specs.Assumptions
 					.Page<LeftMenu>()
 					.LogOut();
 
+				browser.DisableLeavePageQuestions();
 				browser.Close();
 				browser.Dispose();
 			};

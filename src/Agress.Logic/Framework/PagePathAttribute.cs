@@ -1,6 +1,9 @@
 using System;
+using Magnum.Reflection;
 using MassTransit.Util;
 using WatiN.Core;
+using System.Linq;
+using Magnum.Extensions;
 
 namespace Agress.Logic.Framework
 {
@@ -8,12 +11,18 @@ namespace Agress.Logic.Framework
 	public sealed class PagePathAttribute
 		: Attribute, Driver
 	{
+		readonly Type[] _extraDrivers;
 		readonly Uri _url;
 
-		public PagePathAttribute([NotNull] string path)
+		public PagePathAttribute([NotNull] string path, 
+			params Type[] afterwards)
 		{
 			if (path == null) throw new ArgumentNullException("path");
 
+			if (afterwards != null && afterwards.Length > 0 && afterwards.Any(d => !d.Implements(typeof(Driver))))
+				throw new ArgumentException("Not all of extra drivers implement the Driver interface.");
+
+			_extraDrivers = afterwards ?? new Type[0];
 			_url = ComputeUri(BaseUri.Uri, path);
 		}
 
@@ -44,16 +53,10 @@ namespace Agress.Logic.Framework
 
 		public void Drive(Browser b)
 		{
-			ClearSessionIfExpired(b);
 			b.GoTo(Url);
-		}
 
-		static void ClearSessionIfExpired(Browser b)
-		{
-			if (b.Frames.Exists(Find.ById(AgressoNamesAndIds.ContainerFrameId))
-			    && b.Frame(AgressoNamesAndIds.ContainerFrameId).ContainsText(
-			    	PageStrings.SessionExpiryText))
-				b.Button("button").Click(); // lol
+			foreach (var driver in _extraDrivers.Select(t => FastActivator.Create(t)).Cast<Driver>())
+				driver.Drive(b);
 		}
 	}
 }

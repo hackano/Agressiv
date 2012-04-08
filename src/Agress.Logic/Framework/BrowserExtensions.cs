@@ -53,5 +53,14 @@ namespace Agress.Logic.Framework
 		{
 			return typeof (T).GetCustomAttributes(typeof (PageFromDriverAttribute), true).FirstOrDefault() as Driver;
 		}
+
+		public static void DisableLeavePageQuestions(this Browser browser)
+		{
+			const string disableQuestion = "window.onbeforeunload = null;";
+			browser.RunScript(disableQuestion);
+			browser.Frames
+				.ToList()
+				.ForEach(f => f.DomContainer.RunScript(disableQuestion));
+		}
 	}
 }

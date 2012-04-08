@@ -16,6 +16,7 @@ using Agress.Logic.Pages;
 using Agress.Logic.Specs.Framework;
 using Machine.Specifications;
 using WatiN.Core;
+using Machine.Specifications.Runner.Impl;
 
 // ReSharper disable InconsistentNaming
 
@@ -31,7 +32,10 @@ namespace Agress.Logic.Specs.Assumptions
 			};
 
 		Cleanup afterwards = () =>
-			browser.Dispose();
+			{
+				browser.DisableLeavePageQuestions();
+				browser.Dispose();
+			};
 
 		static LoginPage page;
 		static Browser browser;
