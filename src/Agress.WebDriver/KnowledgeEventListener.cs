@@ -45,7 +45,7 @@ namespace Agress.WebDriver
 						expense.Comment.Value = message.Comment;
 						expense.Next1.Click();
 
-						expense.AddRow("REPTOTINT", message.Epoch.AsDateTime(),
+						expense.AddSimpleExpense("REPTOTINT", message.Epoch.AsDateTime(),
 						               message.Comment, message.Amount);
 						expense.DoneWithRows();
 						expense.Next1.Click();

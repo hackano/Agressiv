@@ -40,7 +40,7 @@ namespace Agress.Logic.Specs.Assumptions
 
 		public static void FillOutThird(ExpenseClaimPage page)
 		{
-			page.AddRow("DATORTILL", DateTime.UtcNow, "Datortillbehörsutlägg", 1.0);
+			page.AddSimpleExpense("DATORTILL", DateTime.UtcNow, "Datortillbehörsutlägg", 1.0);
 			page.DoneWithRows();
 		}
 	}
@@ -97,7 +97,7 @@ namespace Agress.Logic.Specs.Assumptions
 
 		Because of = () =>
 			{
-				page.AddRow("DATORTILL", DateTime.UtcNow, ExpenseDescription, 567.0);
+				page.AddSimpleExpense("DATORTILL", DateTime.UtcNow, ExpenseDescription, 567.0);
 				page.DoneWithRows();
 				subjectRow = page.ExpenseTable.First();
 			};
@@ -112,6 +112,25 @@ namespace Agress.Logic.Specs.Assumptions
 			subjectRow.Getter().ShouldNotBeNull();
 	}
 
+	[Subject("Expense Claim Form (3rd page)")]
+	public class when_filling_out_representation
+		: logged_in_context
+	{
+		static ExpenseClaimPage page;
+
+		Establish context = () =>
+			{
+				page = browser.GoToPage<ExpenseClaimPage>(AgressoNamesAndIds.ContainerFrameId);
+				SampleNavigations.FillOutFirst(page, browser);
+				page.Next1.Click();
+			};
+
+		Because of = () =>
+			{
+				page.AddRepresentationInternal("REPTOTINT", DateTime.UtcNow, ExpenseDescription, 11.00);
+				
+			};
+	}
 
 	[Subject("Expense Claim Form (4th page)")]
 	public class when_clicking_adding_expense_line
@@ -154,10 +173,9 @@ namespace Agress.Logic.Specs.Assumptions
 		Because of = () =>
 			{
 				using (var targetStream = new MemoryStream())
+				using (var popup = page.SaveSupportingDocuments(targetStream))
 				{
-					var popup = page.SaveSupportingDocuments(targetStream);
 					printedText = Encoding.UTF8.GetString(targetStream.ToArray());
-					popup.Dispose();
 				}
 			};
 

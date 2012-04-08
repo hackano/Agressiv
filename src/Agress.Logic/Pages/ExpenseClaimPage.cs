@@ -112,7 +112,7 @@ namespace Agress.Logic.Pages
 
 		#endregion
 
-		public void AddRow(string selectValue,
+		public void AddSimpleExpense(string selectValue,
 			DateTime expenseDate, string expenseDescription, 
 			double expenseAmount)
 		{
@@ -127,6 +127,19 @@ namespace Agress.Logic.Pages
 				ExpenseDesc.Value = expenseDescription;
 			
 			Amount.Value = expenseAmount.ToString("0.00", _swedishCulture);
+		}
+
+		private TextField ProjectForExpense
+		{
+			get { return Document.TextField("b_s15_s53_l15s53_ctl00_dim_2_i"); }
+		}
+
+		public void AddRepresentationInternal(DateTime expenseDate,
+			string expenseDescription, double expenseAmount)
+		{
+			AddSimpleExpense("REPTOTINT", expenseDate, expenseDescription, expenseAmount);
+			ProjectForExpense.Value = 10003.ToString(_swedishCulture);
+			UpdateAllPosts.Click();
 		}
 
 		public class ExpenseRow
