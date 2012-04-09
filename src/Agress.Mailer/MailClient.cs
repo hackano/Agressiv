@@ -19,4 +19,21 @@ namespace Agress.Mailer
 	{
 		void Send(MailMessage message);
 	}
+
+	class MailClientImpl
+		: MailClient
+	{
+		readonly SmtpClient _client;
+
+		public MailClientImpl()
+		{
+			// http://stackoverflow.com/questions/7244589/smtpclient-and-app-config-system-net-configuration
+			_client = new SmtpClient();
+		}
+
+		public void Send(MailMessage message)
+		{
+			_client.Send(message);
+		}
+	}
 }

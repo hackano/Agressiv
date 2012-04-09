@@ -81,20 +81,12 @@ namespace Agress.Mailer
 		{
 			var targetPdf = filename + ".pdf";
 
-			try
-			{
-				var input = string.Format("--url=file:///{0}.html", filename.Replace("\\", "/"));
-				var output = string.Format("--out={0}", targetPdf);
-				var exe = Path.GetFullPath(".\\Renderer\\CutyCapt.exe");
-				using (var p = _processManager.Start(exe, input, output))
-				{
-					p.WaitForExit();
-				}
-			}
-			catch (Exception e)
-			{
-				throw;
-			}
+			var input = string.Format("--url=file:///{0}.html", filename.Replace("\\", "/"));
+			var output = string.Format("--out={0}", targetPdf);
+			var exe = Path.GetFullPath(".\\Renderer\\CutyCapt.exe");
+
+			using (var p = _processManager.Start(exe, input, output))
+				p.WaitForExit();
 
 			return targetPdf;
 		}

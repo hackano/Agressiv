@@ -83,7 +83,6 @@ namespace Agress.Mailer.Specs
 			msg.Attachments[0]
 				.ContentType
 				.ShouldEqual(new ContentType("application/x-pdf"));
-
 	}
 
 	// test messages

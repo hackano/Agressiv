@@ -17,9 +17,12 @@ namespace Agress.Mailer
 	{
 		public IProcess Start(string processPath, params string[] args)
 		{
-			return new ProcWrapper(Process.Start(new ProcessStartInfo(processPath,
-				string.Join(" ", args)
-				)));
+			var startInfo = new ProcessStartInfo(processPath, string.Join(" ", args))
+				{
+					CreateNoWindow = true
+				};
+
+			return new ProcWrapper(Process.Start(startInfo));
 		}
 
 		class ProcWrapper : IProcess

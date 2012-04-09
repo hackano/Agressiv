@@ -12,12 +12,16 @@
 // specific language governing permissions and limitations under the License.
 
 using System.Threading;
+using MassTransit;
 using Topshelf;
+using MassTransit.NLogIntegration;
 
 namespace Agress.Mailer
 {
 	internal class Program
 	{
+		IServiceBus _bus;
+
 		static void Main(string[] args)
 		{
 			Thread.CurrentThread.Name = "Mailer Main Thread";
@@ -29,23 +33,35 @@ namespace Agress.Mailer
 							s.ConstructUsing(name => new Program());
 							s.WhenStarted(p => p.Start());
 							s.WhenStopped(p => p.Stop());
+							s.WhenContinued(p => p.Start());
+							s.WhenPaused(p => p.Stop());
 						});
 
 					x.RunAsNetworkService();
 
-					x.SetDescription("Handles the domain logic for the Documently Application.");
-					x.SetDisplayName("Documently Domain Service");
-					x.SetServiceName("Documently.Domain.Service");
+					x.SetDescription("Sends e-mails based on the events from reported expenses.");
+					x.SetDisplayName("Agressiv.Mailer");
+					x.SetServiceName("Agressiv.Mailer");
 				});
 		}
 
 		void Start()
 		{
-		
+			_bus = ServiceBusFactory.New(sbc =>
+				{
+					sbc.UseNLog();
+					sbc.UseRabbitMqRouting();
+					sbc.ReceiveFrom(string.Format("rabbitmq://localhost/{0}", typeof (Program).Namespace));
+					sbc.Subscribe(s => 
+						s.Consumer(() => new MailSender(new MailClientImpl(), new SystemProcessManager()))
+							.Permanent());
+				});
 		}
 
 		void Stop()
 		{
+			if (_bus != null)
+				_bus.Dispose();
 		}
 	}
 }
