@@ -16,7 +16,6 @@ using Agress.Logic.Pages;
 using Agress.Logic.Specs.Framework;
 using Machine.Specifications;
 using WatiN.Core;
-using Machine.Specifications.Runner.Impl;
 
 // ReSharper disable InconsistentNaming
 

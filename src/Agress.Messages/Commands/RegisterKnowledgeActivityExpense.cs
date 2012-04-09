@@ -36,6 +36,11 @@ namespace Agress.Messages.Commands
 		long Epoch { get; }
 
 		/// <summary>
+		/// Gets the target project for the expense.
+		/// </summary>
+		int TargetProject { get; }
+
+		/// <summary>
 		/// Whether to NOT just save as draft, but to mark the report as 'Done'.
 		/// </summary>
 		bool SubmitFinal { get; }

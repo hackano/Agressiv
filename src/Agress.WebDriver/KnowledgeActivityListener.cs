@@ -50,7 +50,7 @@ namespace Agress.WebDriver
 
 						if (message.SubmitFinal)
 							expense.SubmitFinal();
-						else 
+						else
 							expense.SubmitDraft();
 
 						using (var ms = new MemoryStream())
@@ -59,8 +59,8 @@ namespace Agress.WebDriver
 							{
 								var evt = new KnowledgeActivityReplyEvent
 									{
-										Period = popup.Period, 
-										VoucherNumber = popup.VoucherNo, 
+										Period = popup.Period,
+										VoucherNumber = popup.VoucherNo,
 										Voucher = ms.ToArray()
 									};
 

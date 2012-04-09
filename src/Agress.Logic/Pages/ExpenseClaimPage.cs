@@ -142,10 +142,10 @@ namespace Agress.Logic.Pages
 		}
 
 		public void AddRepresentationInternal(DateTime expenseDate,
-			string expenseDescription, double expenseAmount)
+			string expenseDescription, double expenseAmount, int targetProject)
 		{
 			AddSimpleExpenseInner("REPTOTINT", expenseDate, expenseDescription, expenseAmount);
-			ProjectForExpense.Value = 10003.ToString(_swedishCulture);
+			ProjectForExpense.Value = targetProject.ToString(_swedishCulture);
 			UpdateAllPosts.Click();
 			DistributeCosts();
 		}
