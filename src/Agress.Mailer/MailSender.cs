@@ -12,14 +12,16 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
+using System.Net.Mail;
 using Agress.Messages.Events;
+using Agress.Messages.Mailer;
 using MassTransit;
 using MassTransit.Util;
 
 namespace Agress.Mailer
 {
 	public class MailSender
-		: Consumes<KnowledgeActivityRegistered>.All
+		: Consumes<KnowledgeActivityRegistered>.Context
 	{
 		readonly MailClient _sender;
 
@@ -29,9 +31,17 @@ namespace Agress.Mailer
 			_sender = sender;
 		}
 
-		void Consumes<KnowledgeActivityRegistered>.All.Consume(KnowledgeActivityRegistered message)
+		void Consumes<IConsumeContext<KnowledgeActivityRegistered>>.All.Consume(
+			IConsumeContext<KnowledgeActivityRegistered> context)
 		{
-			
+			_sender.Send(
+				new MailMessage());
+
+			context.Bus.Publish<MailSent>(new MailSentImpl());
 		}
+	}
+
+	class MailSentImpl : MailSent
+	{
 	}
 }

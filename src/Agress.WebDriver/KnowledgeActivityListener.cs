@@ -27,10 +27,9 @@ namespace Agress.WebDriver
 
 		public void Consume(IConsumeContext<RegisterKnowledgeActivityExpense> context)
 		{
-			var message = context.Message;
-
-			var t = new Thread(new ThreadStart(delegate
+			Execute(() =>
 				{
+					var message = context.Message;
 					using (var browser = new IE())
 					{
 						_logger.Debug("logging in");
@@ -45,7 +44,11 @@ namespace Agress.WebDriver
 						expense.Comment.Value = message.Comment;
 						expense.Next1.Click();
 
-						expense.AddRepresentationInternal(message.Epoch.AsDateTime(), message.Comment, message.Amount);
+						expense.AddRepresentationInternal(
+							message.Epoch.AsDateTime(), message.Comment,
+							message.Amount,
+							message.TargetProject);
+
 						expense.Next1.Click();
 
 						if (message.SubmitFinal)
@@ -69,10 +72,34 @@ namespace Agress.WebDriver
 							}
 						}
 					}
-				}));
+				});
+		}
+
+		static void Execute(Action action)
+		{
+			var thrown = InSTA(action);
+			if (thrown != null)
+				throw thrown;
+		}
+
+		static Exception InSTA(Action action)
+		{
+			Exception thrown = null;
+			var t = new Thread(new ThreadStart(delegate
+			{
+				try
+				{
+					action();
+				}
+				catch (Exception e)
+				{
+					thrown = e;
+				}
+			}));
 			t.SetApartmentState(ApartmentState.STA);
 			t.Start();
 			t.Join();
+			return thrown;
 		}
 	}
 }

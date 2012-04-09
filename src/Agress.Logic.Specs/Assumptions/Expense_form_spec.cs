@@ -124,7 +124,7 @@ namespace Agress.Logic.Specs.Assumptions
 			};
 
 		Because of = () => 
-			page.AddRepresentationInternal(DateTime.UtcNow, "Purchased a falafel", 11.00);
+			page.AddRepresentationInternal(DateTime.UtcNow, "Purchased a falafel", 11.00, 10003);
 
 		It should_display_wage_article_number = () =>
 			page.ExpenseTable.First()

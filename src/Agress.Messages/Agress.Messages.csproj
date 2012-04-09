@@ -46,6 +46,7 @@
     <Compile Include="Events\FullWeekReported.cs" />
     <Compile Include="Events\KnowledgeActivityRegistered.cs" />
     <Compile Include="Events\SingleDayTimeReported.cs" />
+    <Compile Include="Mailer\EmailSent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
