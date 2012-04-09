@@ -51,17 +51,20 @@ namespace Agress.Mailer
 
 			_logger.Info("transformation to PDF done for {0}", context.Message.VoucherNumber);
 
-			var fs = new FileStream(pdfPath, FileMode.Open, FileAccess.Read);
+			var pdfFs = new FileStream(pdfPath, FileMode.Open, FileAccess.Read);
+			var scanFs = new FileStream(context.Message.Scan.LocalPath,
+			                            FileMode.Open, FileAccess.Read, FileShare.Read);
 			try
 			{
 				message.Subject = string.Format("Registered voucher#{0}", context.Message.VoucherNumber);
 				message.Body = message.Subject;
-				message.Attachments.Add(new Attachment(fs, new ContentType("application/x-pdf")));
+				message.Attachments.Add(new Attachment(pdfFs, new ContentType("application/x-pdf")));
+				message.Attachments.Add(new Attachment(scanFs, new ContentType("image/jpeg")));
 				_sender.Send(message, context.Message.UserName);
 			}
 			finally
 			{
-				fs.Dispose();
+				pdfFs.Dispose();
 			}
 
 			context.Bus.Publish<MailSent>(new MailSentImpl());

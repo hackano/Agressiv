@@ -11,13 +11,16 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using System;
+
 namespace Agress.Messages.Events
 {
 	public interface KnowledgeActivityRegistered
 	{
+		/// <summary>
+		/// As specified by the system as the voucher was registered.
+		/// </summary>
 		string VoucherNumber { get; }
-
-		string Period { get; }
 
 		/// <summary>
 		/// Html page of the voucher
@@ -26,5 +29,10 @@ namespace Agress.Messages.Events
 
 		/// <summary>The UserName of the person who is doing the registering.</summary>
 		string UserName { get; }
+
+		/// <summary>
+		/// Gets the Uri of the scanned image.
+		/// </summary>
+		Uri Scan { get; }
 	}
 }

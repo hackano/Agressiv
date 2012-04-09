@@ -11,6 +11,8 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using System;
+
 namespace Agress.Messages.Commands
 {
 	public interface RegisterKnowledgeActivityExpense
@@ -44,5 +46,11 @@ namespace Agress.Messages.Commands
 		/// Whether to NOT just save as draft, but to mark the report as 'Done'.
 		/// </summary>
 		bool SubmitFinal { get; }
+
+		/// <summary>
+		/// Gets the uri of the scanned image that is to be read into the e-mail together with the
+		/// resulting html page.
+		/// </summary>
+		Uri Scan { get; }
 	}
 }

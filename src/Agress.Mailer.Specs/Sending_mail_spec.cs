@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
 using Agress.Messages.Mailer;
@@ -45,6 +47,11 @@ namespace Agress.Mailer.Specs
 
 		Because of = () =>
 			{
+				var fullPath = Path.GetFullPath("work nap.jpg");
+				var scanPath = new Uri(string.Format("file:///{0}", 
+					fullPath.Replace("\\", "/")));
+				File.Exists(scanPath.LocalPath).ShouldBeTrue();
+
 				mailScenario = TestFactory.ForConsumer<MailSender>()
 					.InSingleBusScenario()
 					.New(x =>
@@ -54,9 +61,10 @@ namespace Agress.Mailer.Specs
 							x.Send<Messages.Events.KnowledgeActivityRegistered>(new KnowledgeActivityRegistered
 								{
 									VoucherNumber = "560000",
-									Period = "24677241",
+									//Period = "24677241",
 									Voucher = htmlPage,
-									UserName = "My Spec User"
+									UserName = "My Spec User",
+									Scan = scanPath
 								},
 								(scenario, context) => context.SendResponseTo(scenario.Bus));
 						});
@@ -78,12 +86,17 @@ namespace Agress.Mailer.Specs
 
 		It should_have_sent_with_attachment = () =>
 			msg.Attachments.Count
-				.ShouldEqual(1);
+				.ShouldEqual(2);
 
 		It should_have_pdf_attachment = () =>
-			msg.Attachments[0]
-				.ContentType
-				.ShouldEqual(new ContentType("application/x-pdf"));
+			msg.Attachments
+				.Any(x => x.ContentType.Equals(new ContentType("application/x-pdf")))
+				.ShouldBeTrue();
+
+		It should_have_image_attachment = () =>
+			msg.Attachments
+				.Any(x => x.ContentType.Equals(new ContentType("image/jpeg")))
+				.ShouldBeTrue();
 	}
 
 	// test messages
@@ -91,8 +104,8 @@ namespace Agress.Mailer.Specs
 		: Messages.Events.KnowledgeActivityRegistered
 	{
 		public string VoucherNumber { get; set; }
-		public string Period { get; set; }
 		public byte[] Voucher { get; set; }
 		public string UserName { get; set; }
+		public Uri Scan { get; set; }
 	}
 }

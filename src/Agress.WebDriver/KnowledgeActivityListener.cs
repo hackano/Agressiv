@@ -34,9 +34,8 @@ namespace Agress.WebDriver
 					{
 						_logger.Debug("logging in");
 						var login = browser.GoToPage<LoginPage>();
-						login.LogIn(new EnvironmentCredentials(
-						            	context.Headers["AGRESSO_USERNAME"],
-						            	context.Headers["AGRESSO_PASSWORD"]));
+						var creds = new EnvironmentCredentials(context.Headers["AGRESSO_USERNAME"], context.Headers["AGRESSO_PASSWORD"]);
+						login.LogIn(creds);
 
 						var expense = browser.GoToPage<ExpenseClaimPage>();
 						expense.ExpenseType.Select(PageStrings.ExpenseClaimPage_TypeOfExpense_Expense);
@@ -62,9 +61,10 @@ namespace Agress.WebDriver
 							{
 								var evt = new KnowledgeActivityReplyEvent
 									{
-										Period = popup.Period,
+										Scan = message.Scan,
 										VoucherNumber = popup.VoucherNo,
-										Voucher = ms.ToArray()
+										Voucher = ms.ToArray(),
+										UserName = creds.UserName
 									};
 
 								context.Respond<KnowledgeActivityRegistered>(evt);

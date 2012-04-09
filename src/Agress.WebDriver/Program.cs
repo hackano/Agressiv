@@ -13,7 +13,6 @@
 
 using System;
 using Agress.Logic;
-using Agress.Messages.Events;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -67,16 +66,6 @@ namespace Agress.WebDriver
 					sbc.UseRabbitMqRouting();
 				});
 		}
-	}
-
-	public class KnowledgeActivityReplyEvent
-		: KnowledgeActivityRegistered
-	{
-		public string VoucherNumber { get; set; }
-		public string Period { get; set; }
-		public byte[] Voucher { get; set; }
-
-		public string UserName { get; set; }
 	}
 
 	static class DateTimeEx
