@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MailClient_spec.cs" />
     <Compile Include="Sending_mail_spec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -83,6 +84,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Agress.Mailer\app.config">
+      <Link>app.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

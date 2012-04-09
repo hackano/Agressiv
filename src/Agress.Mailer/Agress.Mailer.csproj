@@ -71,6 +71,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="IProcess.cs" />
     <Compile Include="MailClient.cs" />
     <Compile Include="MailSender.cs" />
@@ -81,6 +82,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Agress.Messages\Agress.Messages.csproj">

@@ -75,6 +75,8 @@ namespace Agress.WebDriver
 		public string VoucherNumber { get; set; }
 		public string Period { get; set; }
 		public byte[] Voucher { get; set; }
+
+		public string UserName { get; set; }
 	}
 
 	static class DateTimeEx

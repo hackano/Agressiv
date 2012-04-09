@@ -30,7 +30,7 @@ namespace Agress.Mailer.Specs
 				sender = A.Fake<MailClient>();
 				procMgr = A.Fake<ProcessManager>();
 
-				A.CallTo(() => sender.Send(A<MailMessage>.Ignored))
+				A.CallTo(() => sender.Send(A<MailMessage>.Ignored, A<string>.Ignored))
 					.Invokes(call =>
 						{
 							msg = call.Arguments[0] as MailMessage;
@@ -55,7 +55,8 @@ namespace Agress.Mailer.Specs
 								{
 									VoucherNumber = "560000",
 									Period = "24677241",
-									Voucher = htmlPage
+									Voucher = htmlPage,
+									UserName = "My Spec User"
 								},
 								(scenario, context) => context.SendResponseTo(scenario.Bus));
 						});
@@ -72,7 +73,7 @@ namespace Agress.Mailer.Specs
 				.ShouldBeTrue();
 
 		It should_called_send = () => 
-			A.CallTo(() => sender.Send(A<MailMessage>.Ignored))
+			A.CallTo(() => sender.Send(A<MailMessage>.Ignored, A<string>.Ignored))
 				.MustHaveHappened(Repeated.Exactly.Once);
 
 		It should_have_sent_with_attachment = () =>
@@ -92,5 +93,6 @@ namespace Agress.Mailer.Specs
 		public string VoucherNumber { get; set; }
 		public string Period { get; set; }
 		public byte[] Voucher { get; set; }
+		public string UserName { get; set; }
 	}
 }

@@ -11,18 +11,20 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using System;
 using System.Configuration;
 using System.Net.Mail;
 using System.Text;
+using System.Linq;
 
 namespace Agress.Mailer
 {
 	public interface MailClient
 	{
-		void Send(MailMessage message);
+		void Send(MailMessage message, string username);
 	}
 
-	class MailClientImpl
+	public class MailClientImpl
 		: MailClient
 	{
 		readonly SmtpClient _client;
@@ -33,24 +35,44 @@ namespace Agress.Mailer
 			_client = new SmtpClient();
 		}
 
-		public void Send(MailMessage message)
+		public void Send(MailMessage message, string username)
 		{
-			message.To.Add(new MailAddress(To, ToName));
-			
-			message.BodyEncoding = Encoding.UTF8;
-			message.SubjectEncoding = Encoding.UTF8;
+			ConfigureMessage(message, username);
+			SendWithClient(message);
+		}
+
+		/// <summary>Called after configure message.</summary>
+		protected virtual void SendWithClient(MailMessage message)
+		{
+			// consider minimum 5 KB/s sending
+			const int msPerSecond = 1000;
+			var msgSize = message.Attachments.Sum(a => (double)a.ContentStream.Length) / 1024.0;
+			_client.Timeout = Convert.ToInt32(Math.Round(msgSize*msPerSecond));
 
 			_client.Send(message);
 		}
 
-		private string To
+		/// <summary>Configure the message properties</summary>
+		protected virtual void ConfigureMessage(MailMessage message, string username)
 		{
-			get { return ConfigurationManager.AppSettings["email_to"]; }
+			message.To.Add(GetToAddress());
+			message.From = GetFromAddress(username);
+			message.BodyEncoding = Encoding.UTF8;
+			message.SubjectEncoding = Encoding.UTF8;
 		}
 
-		private string ToName
+		static MailAddress GetToAddress()
 		{
-			get { return ConfigurationManager.AppSettings["email_to_name"]; }
+			var mail = ConfigurationManager.AppSettings["email_to"];
+			var name = ConfigurationManager.AppSettings["email_to_name"];
+			return new MailAddress(mail, name);
+		}
+
+		static MailAddress GetFromAddress(string username)
+		{
+			var mail = ConfigurationManager.AppSettings["email_from"];
+			var name = ConfigurationManager.AppSettings["email_from_name"];
+			return new MailAddress(mail, string.Format(name, username));
 		}
 	}
 }

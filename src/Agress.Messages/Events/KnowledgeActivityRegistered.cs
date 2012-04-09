@@ -23,5 +23,8 @@ namespace Agress.Messages.Events
 		/// Html page of the voucher
 		/// </summary>
 		byte[] Voucher { get; }
+
+		/// <summary>The UserName of the person who is doing the registering.</summary>
+		string UserName { get; }
 	}
 }
