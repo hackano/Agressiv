@@ -1,8 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net.Mail;
 using System.Net.Mime;
-using System.Text;
 using Agress.Messages.Mailer;
 using FakeItEasy;
 using Machine.Specifications;
@@ -18,24 +16,32 @@ namespace Agress.Mailer.Specs
 	public class When_receiving_reported_event
 	{
 		static ConsumerTest<BusTestScenario, MailSender> mailScenario;
-		static MailClient sender;
+
 		static byte[] htmlPage;
 		static MailMessage msg;
 
+		static MailClient sender;
+		static ProcessManager procMgr;
+
 		Establish context = () =>
 			{
-				htmlPage = File.ReadAllBytes("Michel_Foucault.htm");
+				htmlPage = File.ReadAllBytes("CutyCapt.html");
 				
 				sender = A.Fake<MailClient>();
+				procMgr = A.Fake<ProcessManager>();
 
 				A.CallTo(() => sender.Send(A<MailMessage>.Ignored))
 					.Invokes(call =>
 						{
 							msg = call.Arguments[0] as MailMessage;
 						});
+
+				A.CallTo(() => procMgr.Start(A<string>.Ignored, A<string[]>.Ignored))
+					.Returns(A.Fake<IProcess>());
 			};
 
-		Cleanup after_test = () => mailScenario.Dispose();
+		Cleanup after_test = () => 
+			mailScenario.Dispose();
 
 		Because of = () =>
 			{
@@ -44,7 +50,7 @@ namespace Agress.Mailer.Specs
 					.New(x =>
 						{
 							//x.UseRabbitMqBusScenario(); // see https://github.com/MassTransit/MassTransit/issues/114
-							x.ConstructUsing(() => new MailSender(sender));
+							x.ConstructUsing(() => new MailSender(sender, new SystemProcessManager()));
 							x.Send<Messages.Events.KnowledgeActivityRegistered>(new KnowledgeActivityRegistered
 								{
 									VoucherNumber = "560000",
@@ -73,10 +79,11 @@ namespace Agress.Mailer.Specs
 			msg.Attachments.Count
 				.ShouldEqual(1);
 
-		It should_have_pdf_attachment = () => 
+		It should_have_pdf_attachment = () =>
 			msg.Attachments[0]
 				.ContentType
 				.ShouldEqual(new ContentType("application/x-pdf"));
+
 	}
 
 	// test messages
