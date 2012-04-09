@@ -11,7 +11,9 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using System.Configuration;
 using System.Net.Mail;
+using System.Text;
 
 namespace Agress.Mailer
 {
@@ -33,7 +35,22 @@ namespace Agress.Mailer
 
 		public void Send(MailMessage message)
 		{
+			message.To.Add(new MailAddress(To, ToName));
+			
+			message.BodyEncoding = Encoding.UTF8;
+			message.SubjectEncoding = Encoding.UTF8;
+
 			_client.Send(message);
+		}
+
+		private string To
+		{
+			get { return ConfigurationManager.AppSettings["email_to"]; }
+		}
+
+		private string ToName
+		{
+			get { return ConfigurationManager.AppSettings["email_to_name"]; }
 		}
 	}
 }

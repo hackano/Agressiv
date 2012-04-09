@@ -54,6 +54,8 @@ namespace Agress.Mailer
 			var fs = new FileStream(pdfPath, FileMode.Open, FileAccess.Read);
 			try
 			{
+				message.From = new MailAddress();
+				message.Subject = string.Format("Registered voucher#{0}", context.Message.VoucherNumber);
 				message.Attachments.Add(new Attachment(fs, new ContentType("application/x-pdf")));
 				_sender.Send(message);
 			}

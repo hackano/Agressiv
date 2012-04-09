@@ -15,3 +15,4 @@ src/Agress.Logic.Specs/Password.cs
 src/Agress.WebDriver/Password.cs
 packages/
 credentials.txt
+src/Agress.Mailer/app.config
