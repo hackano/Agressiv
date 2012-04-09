@@ -61,7 +61,7 @@ namespace Agress.Mailer.Specs
 			mailScenario.Received.Any<Messages.Events.KnowledgeActivityRegistered>();
 
 		It should_have_trigged_sent_email_event = () =>
-			mailScenario.Sent
+			mailScenario.Published
 				.Any<MailSent>()
 				.ShouldBeTrue();
 
