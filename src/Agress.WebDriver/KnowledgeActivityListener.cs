@@ -14,7 +14,7 @@ using WatiN.Core;
 namespace Agress.WebDriver
 {
 	public class KnowledgeActivityListener
-		: Consumes<IConsumeContext<RegisterKnowledgeActivityExpense>>.All
+		: Consumes<RegisterKnowledgeActivityExpense>.Context
 	{
 		readonly IServiceBus _bus;
 		static readonly Logger _logger = LogManager.GetCurrentClassLogger();
@@ -34,7 +34,9 @@ namespace Agress.WebDriver
 					{
 						_logger.Debug("logging in");
 						var login = browser.GoToPage<LoginPage>();
-						var creds = new EnvironmentCredentials(context.Headers["AGRESSO_USERNAME"], context.Headers["AGRESSO_PASSWORD"]);
+						var creds = new EnvironmentCredentials(
+							context.Headers["AGRESSO_USERNAME"],
+							context.Headers["AGRESSO_PASSWORD"]);
 						login.LogIn(creds);
 
 						var expense = browser.GoToPage<ExpenseClaimPage>();

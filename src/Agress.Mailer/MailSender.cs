@@ -65,6 +65,7 @@ namespace Agress.Mailer
 			finally
 			{
 				pdfFs.Dispose();
+				scanFs.Dispose();
 			}
 
 			context.Bus.Publish<MailSent>(new MailSentImpl());
