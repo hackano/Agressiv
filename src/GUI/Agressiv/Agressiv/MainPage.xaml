@@ -1,0 +1,8 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	x:Class="Agressiv.MainPage"
+	Width="640" Height="480">
+
+	<Grid x:Name="LayoutRoot" Background="White"/>
+</UserControl>
