@@ -99,6 +99,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Messages\RKAE.cs" />
     <Compile Include="Modules\EditCommand\EditCommandViewModel.cs" />
     <Compile Include="Modules\EditCommand\Header.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

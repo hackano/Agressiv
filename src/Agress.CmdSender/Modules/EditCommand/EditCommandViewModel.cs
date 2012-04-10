@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 using Agress.CmdSender.Class;
 using Agress.Messages.Commands;
@@ -10,7 +12,7 @@ using System.Collections.ObjectModel;
 
 namespace Agress.CmdSender.Modules.EditCommand
 {
-	public class EditCommandViewModel
+	public class EditCommandViewModel : INotifyPropertyChanged
 	{
 		readonly IServiceBus _bus;
 
@@ -37,11 +39,26 @@ namespace Agress.CmdSender.Modules.EditCommand
 			Headers = new ObservableCollection<Header>();
 			Headers.Add(new Header("AGRESSO_USERNAME", ""));
 			Headers.Add(new Header("AGRESSO_PASSWORD", ""));
+
+			CmdTypes = typeof (RegisterKnowledgeActivityExpense)
+				.Assembly
+				.GetTypes()
+				.Where(t => t.Namespace.Contains("Command"))
+				.ToDictionary(t => t.AssemblyQualifiedName, t => t.FullName);
 		}
 
 		public ObservableCollection<Header> Headers { get; set; }
+		public Dictionary<string, string> CmdTypes { get; set; }
 
-		public string CmdEditor { get; set; }
+		string		_cmdEditor;
+
+		public string CmdEditor
+		{
+			get { return _cmdEditor; }
+			set { _cmdEditor = value;
+			 PropertyChanged(this, new PropertyChangedEventArgs("CmdEditor"));}
+		}
+
 		public string CmdType { get; set; }
 
 		public void Send()
@@ -59,5 +76,7 @@ namespace Agress.CmdSender.Modules.EditCommand
 		{
 			return JsonConvert.DeserializeObject(CmdEditor, t);
 		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
 	}
 }
