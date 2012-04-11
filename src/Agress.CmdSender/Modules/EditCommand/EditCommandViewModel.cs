@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using Agress.CmdSender.Class;
 using Agress.Messages.Commands;
-using Magnum.Reflection;
 using MassTransit;
 using Newtonsoft.Json;
-using System.Collections.ObjectModel;
 
 namespace Agress.CmdSender.Modules.EditCommand
 {
 	public class EditCommandViewModel : INotifyPropertyChanged
 	{
 		readonly IServiceBus _bus;
-
-		public ICommand AddNewHeaderCommand { get; set; }
-
+		string _cmdEditor;
+		string _imageFile;
 
 		public EditCommandViewModel(IServiceBus bus)
 		{
@@ -26,12 +24,55 @@ namespace Agress.CmdSender.Modules.EditCommand
 
 			AddInitialData();
 			AddNewHeaderCommand = new DelegateCommand(AddNewHeader, _ => true);
+			DeleteHeaderCommand = new DelegateCommand(DeleteHeader, _ => true);
+			SendCommand = new DelegateCommand(Send, _ => true);
+		}
 
+		public ICommand AddNewHeaderCommand { get; set; }
+		public ICommand DeleteHeaderCommand { get; set; }
+		public ICommand SendCommand { get; set; }
+
+
+		public ObservableCollection<Header> Headers { get; set; }
+		public Dictionary<string, string> CmdTypes { get; set; }
+
+
+		public string ImageFile
+		{
+			get { return _imageFile; }
+			set
+			{
+				_imageFile = value;
+				PropertyChanged(this, new PropertyChangedEventArgs("ImageFile"));
+			}
+		}
+
+		public string CmdEditor
+		{
+			get { return _cmdEditor; }
+			set
+			{
+				_cmdEditor = value;
+				PropertyChanged(this, new PropertyChangedEventArgs("CmdEditor"));
+			}
+		}
+
+		public string CmdType { get; set; }
+
+		#region INotifyPropertyChanged Members
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		#endregion
+
+		void DeleteHeader(object obj)
+		{
+			Headers.Remove((Header) obj);
 		}
 
 		void AddNewHeader(object obj)
 		{
-			Headers.Add(new Header("",""));
+			Headers.Add(new Header("", ""));
 		}
 
 		void AddInitialData()
@@ -47,36 +88,20 @@ namespace Agress.CmdSender.Modules.EditCommand
 				.ToDictionary(t => t.AssemblyQualifiedName, t => t.FullName);
 		}
 
-		public ObservableCollection<Header> Headers { get; set; }
-		public Dictionary<string, string> CmdTypes { get; set; }
-
-		string		_cmdEditor;
-
-		public string CmdEditor
+		public void Send(object obj)
 		{
-			get { return _cmdEditor; }
-			set { _cmdEditor = value;
-			 PropertyChanged(this, new PropertyChangedEventArgs("CmdEditor"));}
-		}
-
-		public string CmdType { get; set; }
-
-		public void Send()
-		{
-			var msg = ConstructCmd(Type.GetType(CmdType));
+			object msg = ConstructCmd(Type.GetType(CmdType));
 			_bus.Publish<RegisterKnowledgeActivityExpense>(msg,
-				context =>
-					{
-						foreach (var header in Headers)
-							context.SetHeader(header.Key, header.Value);
-					});
+			                                               context =>
+			                                               	{
+			                                               		foreach (Header header in Headers)
+			                                               			context.SetHeader(header.Key, header.Value);
+			                                               	});
 		}
 
 		private object ConstructCmd(Type t)
 		{
 			return JsonConvert.DeserializeObject(CmdEditor, t);
 		}
-
-		public event PropertyChangedEventHandler PropertyChanged;
 	}
 }

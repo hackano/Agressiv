@@ -7,55 +7,44 @@
         Width="800"
         Height="600"
         MinWidth="500"
-        MinHeight="400"
+        MinHeight="450"
         Background="#FFE4E4E4"
         Padding="0"
         mc:Ignorable="d">
 	<Window.Resources>
 		<DataTemplate x:Key="lbHeadersItemTemplate">
-			<StackPanel Orientation="Horizontal">
+			<StackPanel Orientation="Horizontal" Margin="0,2,0,0">
 				<TextBox Width="170" Text="{Binding Key}" />
 				<TextBox Width="170"
 				         Margin="4,0,0,0"
 				         Text="{Binding Value}" />
+				<Button x:Name="btnDelete"
+					Width="60"
+					Height="22"
+					Margin="4,0,0,0"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Center"
+					Command="{Binding DataContext.DeleteHeaderCommand, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+					CommandParameter="{Binding}"
+					Content="Delete" />
 
 			</StackPanel>
 		</DataTemplate>
+		<Style x:Key="LabelStyle" TargetType="{x:Type TextBlock}">
+			<Setter Property="Margin" Value="4,0,0,0"/>
+		</Style>
 	</Window.Resources>
-	<Grid x:Name="LayoutRoot" Margin="20,0">
+	<Grid x:Name="LayoutRoot" Margin="12">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="29" />
-			<RowDefinition Height="93" />
-			<RowDefinition />
-			<RowDefinition Height="182" />
+			<RowDefinition Height="30" />
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30" />
+			<RowDefinition/>
+			<RowDefinition Height="200" />
 		</Grid.RowDefinitions>
-		<StackPanel Grid.Row="1" Margin="0,0,0,8">
-			<TextBlock Text="Select CMD:" />
-			<ComboBox x:Name="CommandTypes"
-			          Width="270"
-			          HorizontalAlignment="Left"
-			          SelectionChanged="CommandTypes_SelectionChanged" />
-			<Grid Height="24" Margin="0,1,0,0">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition />
-					<ColumnDefinition Width="64.641" />
-				</Grid.ColumnDefinitions>
-				<Button Grid.Column="1"
-				        Width="60"
-				        Height="22"
-				        Margin="0,0,0,2.04"
-				        HorizontalAlignment="Left"
-				        Content="Browse..." />
-				<TextBox Margin="0,0,2,0"
-				         TextWrapping="Wrap"
-				         d:LayoutOverrides="Height" />
-			</Grid>
-			<TextBlock VerticalAlignment="Top"
-			           Text="CMD Editor:"
-			           TextWrapping="Wrap" />
-		</StackPanel>
 		<TextBox x:Name="txtCommandJson"
-		         Grid.Row="2"
+		         Grid.Row="4"
 		         Margin="0"
 		         AcceptsReturn="True"
 		         AcceptsTab="True"
@@ -64,33 +53,35 @@
 		         TextWrapping="Wrap"
 		         d:LayoutOverrides="Height" />
 		<Grid x:Name="BottomOutOfBandData"
-		      Grid.Row="3"
-		      Margin="0,4,0,0">
+		      Grid.Row="5"
+		      Margin="0" d:LayoutOverrides="GridBox">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="26" />
-				<RowDefinition Height="0.659*" />
-				<RowDefinition Height="0.341*" />
+				<RowDefinition Height="0.799*" />
+				<RowDefinition Height="0.201*" />
 			</Grid.RowDefinitions>
 			<Button x:Name="btnAdd"
 			        Width="60"
 			        Height="22"
-			        Margin="0"
+			        Margin="0,2,0,0"
 			        HorizontalAlignment="Right"
-			        VerticalAlignment="Top"
-			        Command="{Binding DataContext.AddNewHeaderCommand,
+			        VerticalAlignment="Center"
+			        Command="{Binding AddNewHeaderCommand,
 			                          Mode=OneWay}"
 			        CommandParameter="{Binding}"
 			        Content="Add" />
 			<TextBlock HorizontalAlignment="Left"
-			           VerticalAlignment="Top"
-			           TextWrapping="Wrap"><Run Text="Headers:" />
+			           VerticalAlignment="Center"
+			           TextWrapping="Wrap" Style="{DynamicResource LabelStyle}"><Run Text="Headers:" />
 			</TextBlock>
 			<Button Grid.Row="2"
 			        Width="60"
 			        Height="22"
-			        Margin="0,4,0,0"
 			        HorizontalAlignment="Left"
-			        VerticalAlignment="Top"
+			        VerticalAlignment="Center"
+					 Command="{Binding SendCommand,
+			                          Mode=OneWay}"
+			        CommandParameter="{Binding}"
 			        Content="Send" />
 			<ListBox x:Name="lbHeaders"
 			         Grid.Row="1"
@@ -98,7 +89,27 @@
 			         BorderBrush="{x:Null}"
 			         DataContext="{Binding}"
 			         ItemTemplate="{DynamicResource lbHeadersItemTemplate}"
-			         ScrollViewer.HorizontalScrollBarVisibility="Hidden" />
+			         ScrollViewer.HorizontalScrollBarVisibility="Hidden" Margin="0,0,0,24.36" BorderThickness="0" />
 		</Grid>
+		<TextBlock Text="Select CMD:" VerticalAlignment="Center" Style="{DynamicResource LabelStyle}" />
+		<ComboBox x:Name="CommandTypes"
+			SelectionChanged="CommandTypes_SelectionChanged" Grid.Row="1" Height="24" />
+		<Grid Grid.Row="2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition Width="60" />
+			</Grid.ColumnDefinitions>
+			<Button x:Name="btnGetFile" Grid.Column="1"
+				Width="60"
+				Height="22"
+				Margin="0,0,0,1.999"
+				HorizontalAlignment="Right"
+				Content="Browse..." d:LayoutOverrides="VerticalMargin" Click="btnGetFile_Click" />
+			<TextBox x:Name="txtImage" Text="{Binding ImageFile}"
+				TextWrapping="Wrap" Margin="0,0,4,0" Height="24" />
+		</Grid>
+		<TextBlock VerticalAlignment="Center"
+			Text="CMD Editor:"
+			TextWrapping="Wrap" Grid.Row="3" Style="{DynamicResource LabelStyle}" />
 	</Grid>
 </Window>

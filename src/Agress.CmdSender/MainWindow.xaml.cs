@@ -1,22 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Agress.CmdSender.Messages;
 using Agress.CmdSender.Modules.EditCommand;
 using Agress.Messages.Commands;
-using Magnum.Reflection;
 using MassTransit;
 using MassTransit.NLogIntegration;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 
 namespace Agress.CmdSender
@@ -26,19 +17,19 @@ namespace Agress.CmdSender
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		readonly EditCommandViewModel model;
-
 		readonly Dictionary<Type, object> _defaultFor = new Dictionary<Type, object>
 			{
-				{ typeof(RegisterKnowledgeActivityExpense), new RKAE() }
+				{typeof (RegisterKnowledgeActivityExpense), new RKAE()}
 			};
+
+		readonly EditCommandViewModel model;
 
 
 		public MainWindow()
 		{
 			InitializeComponent();
 
-			var sb = ServiceBusFactory.New(sbc =>
+			IServiceBus sb = ServiceBusFactory.New(sbc =>
 				{
 					sbc.UseNLog();
 					sbc.ReceiveFrom("rabbitmq://localhost/Agress.CmdSender");
@@ -58,11 +49,20 @@ namespace Agress.CmdSender
 			if (CommandTypes.SelectedIndex == -1)
 				return;
 
-			var t = Type.GetType(CommandTypes.SelectedValue.ToString());
-			var defObj = _defaultFor[t];
+			Type t = Type.GetType(CommandTypes.SelectedValue.ToString());
+			object defObj = _defaultFor[t];
 			model.CmdEditor = JsonConvert.SerializeObject(defObj);
 		}
 
-	
+		private void btnGetFile_Click(object sender, RoutedEventArgs e)
+		{
+			var dlg = new OpenFileDialog {Filter = "Image Files (*.png, *.jpg)|*.png;*.jpg"};
+			bool? result = dlg.ShowDialog();
+
+			if (result == true)
+			{
+				model.ImageFile = dlg.FileName;
+			}
+		}
 	}
 }
