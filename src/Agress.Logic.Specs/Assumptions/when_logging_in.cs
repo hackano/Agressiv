@@ -14,8 +14,11 @@
 using Agress.Logic.Framework;
 using Agress.Logic.Pages;
 using Agress.Logic.Specs.Framework;
+using Agress.Messages.Commands;
 using Machine.Specifications;
+using Magnum.Reflection;
 using WatiN.Core;
+using System.Linq;
 
 // ReSharper disable InconsistentNaming
 

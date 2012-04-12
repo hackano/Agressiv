@@ -60,6 +60,7 @@ namespace Agress.Mailer
 				message.Body = message.Subject;
 				message.Attachments.Add(new Attachment(pdfFs, new ContentType("application/x-pdf")));
 				message.Attachments.Add(new Attachment(scanFs, new ContentType("image/jpeg")));
+				
 				_sender.Send(message, context.Message.UserName);
 			}
 			finally

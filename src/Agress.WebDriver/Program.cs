@@ -12,12 +12,14 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
+using System.Threading;
 using Agress.Logic;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using MassTransit;
 using MassTransit.NLogIntegration;
+using Topshelf;
 using Component = Castle.MicroKernel.Registration.Component;
 
 namespace Agress.WebDriver
@@ -35,6 +37,25 @@ namespace Agress.WebDriver
 
 		static void Main(string[] args)
 		{
+			Thread.CurrentThread.Name = "Mailer Main Thread";
+
+			HostFactory.Run(x =>
+			{
+				x.Service<Program>(s =>
+				{
+					s.ConstructUsing(name => new Program());
+					s.WhenStarted(p => p.Start());
+					s.WhenStopped(p => p.Stop());
+					s.WhenContinued(p => p.Start());
+					s.WhenPaused(p => p.Stop());
+				});
+
+				x.RunAsNetworkService();
+
+				x.SetDescription("Performs reporting of expenses, by driving the browser through the Agresso UI");
+				x.SetDisplayName("Agressiv.WebDriver");
+				x.SetServiceName("Agressiv.WebDriver");
+			});
 		}
 
 		void Stop()
@@ -43,7 +64,7 @@ namespace Agress.WebDriver
 				_container.Release(_bus);
 		}
 
-		void Run()
+		void Start()
 		{
 			_bus = ServiceBusFactory.New(sbc =>
 				{
@@ -51,17 +72,7 @@ namespace Agress.WebDriver
 
 					sbc.ReceiveFrom("rabbitmq://localhost/Agressiv.WebDriver");
 
-					sbc.Subscribe(s =>
-						{
-							var sett = Settings.Default;
-							s.Consumer(() =>
-							           new MainPresenter(_bus,
-							                             sett.Login_Username,
-							                             sett.Login_Password,
-							                             sett.Login_Client,
-							                             sett.Login_Url
-							           	));
-						});
+					sbc.Subscribe(s => s.LoadFrom(_container));
 
 					sbc.UseRabbitMqRouting();
 				});
