@@ -41,6 +41,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Caliburn.Micro">
+      <HintPath>..\packages\Caliburn.Micro.1.3.1\lib\net40\Caliburn.Micro.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.3.0.0.4001\lib\net40-client\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\packages\Castle.Windsor.3.0.0.4001\lib\net40\Castle.Windsor.dll</HintPath>
+    </Reference>
     <Reference Include="Magnum">
       <HintPath>..\packages\Magnum.2.0.0.4\lib\NET40\Magnum.dll</HintPath>
     </Reference>
@@ -65,8 +74,21 @@
     <Reference Include="RabbitMQ.Client">
       <HintPath>..\packages\RabbitMQ.Client.2.8.1\lib\net30\RabbitMQ.Client.dll</HintPath>
     </Reference>
+    <Reference Include="ReactiveXaml">
+      <HintPath>..\packages\reactivexaml.1.4.1.0\lib\Net4\ReactiveXaml.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactiveXaml.Blend">
+      <HintPath>..\packages\reactivexaml.1.4.1.0\lib\Net4\ReactiveXaml.Blend.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Reactive, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Main.1.0.11226\lib\Net4\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.1.3.1\lib\net40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -84,7 +106,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
+    <Compile Include="BusInstaller.cs" />
+    <Compile Include="CmdSenderBootstrapper.cs" />
+    <Compile Include="Messages\RAE.cs" />
+    <Compile Include="ViewModelsInstaller.cs" />
+    <Compile Include="WindsorExtensions.cs" />
+    <Page Include="Modules\Commands\EditCommand\EditCommandView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -93,15 +120,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Class\DelegateCommand.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="Modules\Commands\EditCommand\EditCommandView.xaml.cs">
+      <DependentUpon>EditCommandView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Messages\RKAE.cs" />
-    <Compile Include="Modules\EditCommand\EditCommandViewModel.cs" />
-    <Compile Include="Modules\EditCommand\Header.cs" />
+    <Compile Include="Modules\Commands\EditCommand\EditCommandViewModel.cs" />
+    <Compile Include="Modules\Commands\EditCommand\Header.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

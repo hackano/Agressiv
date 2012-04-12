@@ -1,4 +1,4 @@
-namespace Agress.CmdSender.Modules.EditCommand
+namespace Agress.CmdSender.Modules.Commands.EditCommand
 {
 	public class Header
 	{
