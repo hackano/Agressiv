@@ -107,14 +107,13 @@
 			DisplayMemberPath="Value"
 			ItemsSource="{Binding CmdTypes}"
 			SelectedValuePath="Key">
-		  <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <cal:ActionMessage MethodName="CommandTypeSelected">
-                            <cal:Parameter Value="{Binding ElementName=CommandTypes,Path=SelectedValue}"></cal:Parameter>
-                        </cal:ActionMessage>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>   
-
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="SelectionChanged">
+					<cal:ActionMessage MethodName="CommandTypeSelected">
+						<cal:Parameter Value="{Binding ElementName=CommandTypes, Path=SelectedValue}"></cal:Parameter>
+					</cal:ActionMessage>
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
 		</ComboBox>
 		<Grid Grid.Row="2">
 			<Grid.ColumnDefinitions>

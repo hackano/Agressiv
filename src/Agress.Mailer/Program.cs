@@ -13,8 +13,9 @@
 
 using System.Threading;
 using MassTransit;
+using MassTransit.Log4NetIntegration;
 using Topshelf;
-using MassTransit.NLogIntegration;
+using log4net.Config;
 
 namespace Agress.Mailer
 {
@@ -24,6 +25,8 @@ namespace Agress.Mailer
 
 		static void Main(string[] args)
 		{
+			BasicConfigurator.Configure();
+
 			Thread.CurrentThread.Name = "Mailer Main Thread";
 
 			HostFactory.Run(x =>
@@ -49,7 +52,7 @@ namespace Agress.Mailer
 		{
 			_bus = ServiceBusFactory.New(sbc =>
 				{
-					sbc.UseNLog();
+					sbc.UseLog4Net();
 					sbc.UseRabbitMqRouting();
 					sbc.ReceiveFrom(string.Format("rabbitmq://localhost/{0}", typeof (Program).Namespace));
 					sbc.Subscribe(s => 

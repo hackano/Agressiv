@@ -7,7 +7,6 @@ using Agress.Logic.Pages;
 using Agress.Messages.Commands;
 using Agress.Messages.Events;
 using MassTransit;
-using MassTransit.Util;
 using NLog;
 using WatiN.Core;
 
@@ -16,14 +15,7 @@ namespace Agress.WebDriver
 	public class KnowledgeActivityListener
 		: Consumes<RegisterKnowledgeActivityExpense>.Context
 	{
-		readonly IServiceBus _bus;
 		static readonly Logger _logger = LogManager.GetCurrentClassLogger();
-
-		public KnowledgeActivityListener([NotNull] IServiceBus bus)
-		{
-			if (bus == null) throw new ArgumentNullException("bus");
-			_bus = bus;
-		}
 
 		public void Consume(IConsumeContext<RegisterKnowledgeActivityExpense> context)
 		{
@@ -39,7 +31,7 @@ namespace Agress.WebDriver
 							context.Headers["AGRESSO_PASSWORD"]);
 						login.LogIn(creds);
 
-						var expense = browser.GoToPage<ExpenseClaimPage>();
+						var expense = browser.GoToPage<ExpenseClaimPage>(AgressoNamesAndIds.ContainerFrameId);
 						expense.ExpenseType.Select(PageStrings.ExpenseClaimPage_TypeOfExpense_Expense);
 						expense.Cause.Value = message.Cause;
 						expense.Comment.Value = message.Comment;
@@ -69,10 +61,16 @@ namespace Agress.WebDriver
 										UserName = creds.UserName
 									};
 
-								context.Respond<KnowledgeActivityRegistered>(evt);
-								_bus.Publish(evt);
+								context.Bus.Publish(evt);
 							}
 						}
+
+						browser.Frame(AgressoNamesAndIds.MenuFrameId)
+							.Page<LeftMenu>()
+							.LogOut();
+
+						browser.DisableLeavePageQuestions();
+						browser.Close();
 					}
 				});
 		}

@@ -2,7 +2,7 @@
 
 namespace Agress.Logic.Pages
 {
-	class LeftMenu
+	public class LeftMenu
 		: Page
 	{
 		public Image PlusLink

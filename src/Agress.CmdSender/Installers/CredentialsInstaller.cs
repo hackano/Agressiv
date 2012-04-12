@@ -11,23 +11,24 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using System.Windows;
+using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.SubSystems.Configuration;
+using Castle.Windsor;
 using NLog;
 
-namespace Agress.CmdSender
+namespace Agress.CmdSender.Installers
 {
-	/// <summary>
-	/// 	Interaction logic for App.xaml
-	/// </summary>
-	public partial class App : Application
+	public class CredentialsInstaller
+		: IWindsorInstaller
 	{
 		static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
-		public App()
+		public void Install(IWindsorContainer container, IConfigurationStore store)
 		{
-			InitializeComponent();
+			_logger.Debug("installing credentials");
 
-			_logger.Debug("initialized component");
+			container.Register(Component.For<Credentials>()
+				.Instance(EnvironmentCredentials.GetCredentialsFromFileOrEnv()));
 		}
 	}
 }

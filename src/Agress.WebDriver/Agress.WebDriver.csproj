@@ -58,6 +58,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MassTransit.2.1.1\lib\net40\MassTransit.dll</HintPath>
     </Reference>
+    <Reference Include="MassTransit.Log4NetIntegration">
+      <HintPath>..\packages\MassTransit.Log4Net.2.1.1\lib\net40\MassTransit.Log4NetIntegration.dll</HintPath>
+    </Reference>
     <Reference Include="MassTransit.NLogIntegration, Version=2.1.410.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MassTransit.NLog.2.1.1\lib\net40\MassTransit.NLogIntegration.dll</HintPath>

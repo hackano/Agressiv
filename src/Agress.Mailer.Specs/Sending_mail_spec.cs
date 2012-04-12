@@ -17,6 +17,7 @@ namespace Agress.Mailer.Specs
 	[Subject(typeof (MailSender))]
 	public class When_receiving_reported_event
 	{
+		const string VoucherNo = "560000";
 		static ConsumerTest<BusTestScenario, MailSender> mailScenario;
 
 		static byte[] htmlPage;
@@ -47,9 +48,9 @@ namespace Agress.Mailer.Specs
 
 		Because of = () =>
 			{
-				var fullPath = Path.GetFullPath("work nap.jpg");
-				var scanPath = new Uri(string.Format("file:///{0}", 
-					fullPath.Replace("\\", "/")));
+				var fullPath = Path.GetFullPath(@"C:\Users\xyz\Dropbox\Dropbox-Jayway\Reseräkning\2011-01-29 - The Queens Head - KKväll.jpg");
+				var scanPath = new Uri(string.Format("file:///{0}",
+					Uri.EscapeUriString(fullPath.Replace("\\", "/"))));
 				File.Exists(scanPath.LocalPath).ShouldBeTrue();
 
 				mailScenario = TestFactory.ForConsumer<MailSender>()
@@ -60,7 +61,7 @@ namespace Agress.Mailer.Specs
 							x.ConstructUsing(() => new MailSender(sender, new SystemProcessManager()));
 							x.Send<Messages.Events.KnowledgeActivityRegistered>(new KnowledgeActivityRegistered
 								{
-									VoucherNumber = "560000",
+									VoucherNumber = VoucherNo,
 									//Period = "24677241",
 									Voucher = htmlPage,
 									UserName = "My Spec User",
@@ -88,15 +89,34 @@ namespace Agress.Mailer.Specs
 			msg.Attachments.Count
 				.ShouldEqual(2);
 
-		It should_have_pdf_attachment = () =>
-			msg.Attachments
-				.Any(x => x.ContentType.Equals(new ContentType("application/x-pdf")))
-				.ShouldBeTrue();
+		// seems like octet-stream is preferred by mail clients
 
-		It should_have_image_attachment = () =>
+		//It should_have_pdf_attachment = () =>
+		//    msg.Attachments
+		//        .Any(x => x.ContentType.MediaType.Equals("application/x-pdf"))
+		//        .ShouldBeTrue();
+
+		//It should_have_image_attachment = () =>
+		//    msg.Attachments
+		//        .Any(x => x.ContentType.MediaType.Equals("image/jpeg"))
+		//        .ShouldBeTrue();
+
+		It should_have_proper_names = () =>
 			msg.Attachments
-				.Any(x => x.ContentType.Equals(new ContentType("image/jpeg")))
-				.ShouldBeTrue();
+				.ToList()
+				.ForEach(a => a.Name.ShouldNotBeEmpty());
+
+		static Attachment FindAttachment(string namePart)
+		{
+			return msg.Attachments.First(x => x.Name.Contains(namePart));
+		}
+
+		// https://connect.microsoft.com/VisualStudio/feedback/details/696372/filename-encoding-error-when-encoding-utf-8-and-encoded-name-exceeds-the-length-of-a-single-mime-header-line#details
+		//It should_give_the_scan_its_real_name = () =>
+		//    FindAttachment("jpg").Name.ShouldEqual("2011-01-29 - The Queens Head - KKväll.jpg");
+
+		It should_give_pdf_real_name = () =>
+			FindAttachment("pdf").Name.ShouldEqual(VoucherNo + ".pdf");
 	}
 
 	// test messages

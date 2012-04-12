@@ -31,7 +31,7 @@ namespace Agress.Logic.Pages
 			get
 			{
 				return Document
-					.TableCell(Find.ByText(PageStrings.ExpenseClaimPrintOut_VoucherNoAbbr))
+					.Element(Find.ByText(PageStrings.ExpenseClaimPrintOut_VoucherNoAbbr))
 					.NextSibling
 					.Text;
 			}

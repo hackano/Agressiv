@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Agress.CmdSender.Installers;
 using Agress.CmdSender.Modules.Commands.EditCommand;
 using Caliburn.Micro;
 using Castle.Windsor;
@@ -15,8 +16,8 @@ namespace Agress.CmdSender
 			_container = new WindsorContainer();
 			_container.Install(
 				new BusInstaller("rabbitmq://localhost/Agress.CmdSender"),
-				new ViewModelsInstaller()
-				);
+				new ViewModelsInstaller(),
+				new CredentialsInstaller());
 		}
 
 		protected override object GetInstance(Type service, string key)

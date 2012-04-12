@@ -1,4 +1,4 @@
-﻿// Copyright 2012 Henrik Feldt
+﻿// Copyright 2012 Henrik Feldt, Håkan Hedenström
 //  
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -15,7 +15,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Agress.Logic
+namespace Agress.CmdSender
 {
 	public interface Credentials
 	{
@@ -24,7 +24,7 @@ namespace Agress.Logic
 	}
 
 	/// <summary>
-	/// Gets the credentials for the login procedure.
+	/// 	Gets the credentials for the login procedure.
 	/// </summary>
 	public sealed class EnvironmentCredentials : Credentials
 	{
@@ -51,9 +51,19 @@ namespace Agress.Logic
 			get { return ENV("AGRESSO_PASSWORD") ?? _password; }
 		}
 
-		private static string ENV(string envKey)
+		static string ENV(string envKey)
 		{
 			return Environment.GetEnvironmentVariable(envKey);
+		}
+
+		public static Credentials GetCredentialsFromFileOrEnv()
+		{
+			if (File.Exists("credentials.txt"))
+			{
+				var rows = File.ReadAllLines("credentials.txt", Encoding.UTF8);
+				return new EnvironmentCredentials(rows[0], rows[1]);
+			}
+			return new EnvironmentCredentials();
 		}
 	}
 }

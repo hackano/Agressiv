@@ -157,6 +157,7 @@ namespace Agress.Logic.Specs.Assumptions
 	public class when_done_can_print
 		: logged_in_context
 	{
+		static string voucherNo;
 		static string printedText;
 		static ExpenseClaimPage page;
 
@@ -176,10 +177,14 @@ namespace Agress.Logic.Specs.Assumptions
 				using (var popup = page.SaveSupportingDocuments(targetStream))
 				{
 					printedText = Encoding.UTF8.GetString(targetStream.ToArray());
+					voucherNo = popup.VoucherNo;
 				}
 			};
 
 		It should_have_gotten_text = () =>
 			printedText.ShouldContain(PageStrings.ExpenseClaimPrintOut_ExpectedHeading);
+
+		It should_have_voucher_no = () => 
+			voucherNo.ShouldNotBeEmpty();
 	}
 }

@@ -18,8 +18,9 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using MassTransit;
-using MassTransit.NLogIntegration;
+using MassTransit.Log4NetIntegration;
 using Topshelf;
+using log4net.Config;
 using Component = Castle.MicroKernel.Registration.Component;
 
 namespace Agress.WebDriver
@@ -37,6 +38,8 @@ namespace Agress.WebDriver
 
 		static void Main(string[] args)
 		{
+			BasicConfigurator.Configure();
+
 			Thread.CurrentThread.Name = "Mailer Main Thread";
 
 			HostFactory.Run(x =>
@@ -68,7 +71,7 @@ namespace Agress.WebDriver
 		{
 			_bus = ServiceBusFactory.New(sbc =>
 				{
-					sbc.UseNLog();
+					sbc.UseLog4Net();
 
 					sbc.ReceiveFrom("rabbitmq://localhost/Agressiv.WebDriver");
 
@@ -76,6 +79,8 @@ namespace Agress.WebDriver
 
 					sbc.UseRabbitMqRouting();
 				});
+
+			_container.Register(Component.For<IServiceBus>().Instance(_bus));
 		}
 	}
 
