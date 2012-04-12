@@ -1,0 +1,9 @@
+﻿<Agress_CmdSender_Modules_EditCommand:EditCommandViewModel
+xmlns:Agress_CmdSender_Modules_EditCommand="clr-namespace:Agress.CmdSender.Modules.Commands.EditCommand"
+CmdEditor="Cras class" CmdType="Curae aliquam donec">
+	<Agress_CmdSender_Modules_EditCommand:EditCommandViewModel.Headers>
+		<Agress_CmdSender_Modules_EditCommand:Header Key="AGRESSO_USERNAME" Value="håkanhedenström"/>
+		<Agress_CmdSender_Modules_EditCommand:Header Key="AGRESSO_PASSWORD" Value="6606"/>
+		<Agress_CmdSender_Modules_EditCommand:Header Key="Habitasse congue" Value="Erat eros lorem morbi cursus"/>
+	</Agress_CmdSender_Modules_EditCommand:EditCommandViewModel.Headers>
+</Agress_CmdSender_Modules_EditCommand:EditCommandViewModel>

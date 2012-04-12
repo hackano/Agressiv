@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "AgressivSite", "AgressivSite\", "{d4da5139-8341-49e4-93a5-ac1bcd41955c}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		ProjOutputReferences = "{fa8cb10f-1b0a-4147-a0cb-e8a401893122}|ClientBin|false;"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agressiv", "Agressiv\Agressiv.csproj", "{fa8cb10f-1b0a-4147-a0cb-e8a401893122}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D4DA5139-8341-49E4-93A5-AC1BCD41955C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4DA5139-8341-49E4-93A5-AC1BCD41955C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4DA5139-8341-49E4-93A5-AC1BCD41955C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4DA5139-8341-49E4-93A5-AC1BCD41955C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA8CB10F-1B0A-4147-A0CB-E8A401893122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA8CB10F-1B0A-4147-A0CB-E8A401893122}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA8CB10F-1B0A-4147-A0CB-E8A401893122}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA8CB10F-1B0A-4147-A0CB-E8A401893122}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
