@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Input;
-using Agress.CmdSender.Class;
 using Agress.CmdSender.Messages;
 using Agress.Messages.Commands;
 using MassTransit;
@@ -15,19 +13,8 @@ namespace Agress.CmdSender.Modules.Commands.EditCommand
 {
 	public class EditCommandViewModel : INotifyPropertyChanged
 	{
+		private readonly IServiceBus _bus;
 		private readonly Dictionary<Type, object> _defaultFor = ConstructDefaultsDictionary();
-
-		static Dictionary<Type, object> ConstructDefaultsDictionary()
-		{
-			return new Dictionary<Type, object>
-				{
-					{typeof (RegisterKnowledgeActivityExpense), new RKAE()},
-					{ typeof(RegisterAccessoryExpense), new RAE() },
-					//{ typeof()}
-				};
-		}
-
-		private IServiceBus _bus;
 		string _cmdEditor;
 		string _imageFile;
 
@@ -35,15 +22,10 @@ namespace Agress.CmdSender.Modules.Commands.EditCommand
 		{
 			if (bus == null) throw new ArgumentNullException("bus");
 			_bus = bus;
-
 			AddInitialData();
-			AssignCommands();
 		}
 
-		public ICommand AddNewHeaderCommand { get; set; }
-		public ICommand DeleteHeaderCommand { get; set; }
-		public ICommand SendCommand { get; set; }
-		public ICommand TypesSelectedCommand { get; set; }
+
 		public ObservableCollection<Header> Headers { get; set; }
 		public Dictionary<string, string> CmdTypes { get; set; }
 		public string CmdType { get; set; }
@@ -75,19 +57,22 @@ namespace Agress.CmdSender.Modules.Commands.EditCommand
 
 		#endregion
 
-		void AssignCommands()
+		static Dictionary<Type, object> ConstructDefaultsDictionary()
 		{
-			AddNewHeaderCommand = new DelegateCommand(AddNewHeader, _ => true);
-			DeleteHeaderCommand = new DelegateCommand(DeleteHeader, _ => true);
-			SendCommand = new DelegateCommand(Send, _ => true);
-			TypesSelectedCommand = new DelegateCommand(CommandTypeSelect, _ => true);
+			return new Dictionary<Type, object>
+				{
+					{typeof (RegisterKnowledgeActivityExpense), new RKAE()},
+					{typeof (RegisterAccessoryExpense), new RAE()},
+					//{ typeof()}
+				};
 		}
+
 
 		void AddInitialData()
 		{
 			Headers = new ObservableCollection<Header>
 				{
-					new Header("AGRESSO_USERNAME", ""), 
+					new Header("AGRESSO_USERNAME", ""),
 					new Header("AGRESSO_PASSWORD", "")
 				};
 
@@ -98,18 +83,18 @@ namespace Agress.CmdSender.Modules.Commands.EditCommand
 				.ToDictionary(t => t.AssemblyQualifiedName, t => t.FullName);
 		}
 
-		void CommandTypeSelect(object obj)
+		public void CommandTypeSelected(object obj)
 		{
 			Type t = Type.GetType(obj.ToString());
 			CmdEditor = JsonConvert.SerializeObject(_defaultFor[t]);
 		}
 
-		void DeleteHeader(object obj)
+		public void DeleteHeader(object obj)
 		{
 			Headers.Remove((Header) obj);
 		}
 
-		void AddNewHeader(object obj)
+		public void AddNewHeader()
 		{
 			Headers.Add(new Header("", ""));
 		}
@@ -123,15 +108,20 @@ namespace Agress.CmdSender.Modules.Commands.EditCommand
 				ImageFile = dlg.FileName;
 		}
 
-		public void Send(object obj)
+		public void Send()
 		{
-			var msg = ConstructCmd(Type.GetType(CmdType));
+
+			if (CmdType == null)
+				return;
+
+			object msg = ConstructCmd(Type.GetType(CmdType));
+
 			_bus.Publish<RegisterKnowledgeActivityExpense>(msg,
-			    context =>
-			    {
-			        foreach (var header in Headers)
-			            context.SetHeader(header.Key, header.Value);
-			    });
+			                                               context =>
+			                                               	{
+			                                               		foreach (Header header in Headers)
+			                                               			context.SetHeader(header.Key, header.Value);
+			                                               	});
 		}
 
 		object ConstructCmd(Type cmdType)
